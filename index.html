@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050505">
+<title>Potti — A Birthday World</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stars" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div id="rotatePrompt" class="rotate-prompt hidden"><div><span class="rotate-icon">↻</span><h2>Turn your phone sideways</h2><p>This little world is made for landscape.</p></div></div>
+<div id="timerDock" class="timer-dock hidden" aria-live="polite"><span>Next birthday</span><strong id="miniTimer">—</strong></div>
+<div id="finalBurst" class="final-burst" aria-hidden="true"></div>
+<main id="app">
+  <section class="scene active" id="arrival">
+    <div class="center arrival-center">
+      <button class="moon-orb realistic-moon" id="enterLight" aria-label="Touch the moon">
+        <span class="moon-glow" aria-hidden="true"></span>
+        <span class="moon-surface" aria-hidden="true"></span>
+      </button>
+      <p class="eyebrow fade-in" id="touchMoonLabel">TOUCH THE MOON</p>
+      <div class="arrival-date" id="arrivalDate">29 · 09 · 2026</div>
+      <div class="arrival-line" id="arrivalLine">Tonight, this is your night.</div>
+      <div class="arrival-quote" id="arrivalQuote"></div>
+      <button class="ghost-next hidden" id="arrivalNext" data-next="birthdayIntro">Begin <span>→</span></button>
+    </div>
+  </section>
+
+  <section class="scene birthday-scene" id="birthdayIntro">
+    <div class="center narrow birthday-center">
+      <div class="birthday-stage">
+        <div class="particle-burst" id="birthdayParticles" aria-hidden="true"></div>
+        <div class="cake-stage layer-cake" id="layerCake" aria-label="Birthday cake forming layer by layer">
+          <div class="cake-layer cake-base"></div>
+          <div class="cake-cream cream-base"></div>
+          <div class="cake-layer cake-upper"></div>
+          <div class="cake-cream cream-upper"></div>
+          <div class="cake-decor" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="cake-candle" id="cakeCandle"><span class="candle-wick"></span><span class="candle-body"></span><button class="flame" id="flame" aria-label="Tap the flame"></button></div>
+        </div>
+      </div>
+      <button class="interaction-prompt hidden" id="flamePrompt">Tap the flame <span>✦</span></button>
+      <div id="birthdayReveal" class="birthday-reveal">
+        <p class="eyebrow">TODAY IS YOURS</p>
+        <h2>Happy Birthday Tulasi ❤️</h2>
+        <p class="birthday-dear">Dear Cute Lovely Thangoo</p>
+      </div>
+      <button class="ghost-next hidden" id="cakeNext" data-next="lifeClock">Continue <span>→</span></button>
+    </div>
+  </section>
+
+  <section class="scene" id="lifeClock">
+    <div class="center">
+      <p class="eyebrow">YOUR LIFE, IN REAL TIME</p>
+      <div id="ageReveal" class="age-button" aria-label="Your current age">—</div>
+      <p class="clock-instruction">Your age, counted live from your birth moment.</p>
+      <div id="agePanel" class="age-panel">
+        <div><strong id="years">—</strong><span>Years</span></div>
+        <div><strong id="days">—</strong><span>Days</span></div>
+        <div><strong id="hours">—</strong><span>Hours</span></div>
+        <div><strong id="minutes">—</strong><span>Minutes</span></div>
+        <div><strong id="seconds">—</strong><span>Seconds</span></div>
+      </div>
+      <button class="ghost-next" data-next="discover">Continue <span>→</span></button>
+    </div>
+  </section>
+
+  <section class="scene" id="discover">
+    <div class="center narrow">
+      <p class="eyebrow">A LITTLE GAME</p>
+      <h2>Five stars are hiding here.</h2>
+      <p class="body-copy">Find them. Touch them. Don't rush.</p>
+      <div class="star-hunt" id="starHunt"></div>
+      <div class="hunt-count"><span id="foundStars">0</span> / 5</div>
+      <div class="discover-quote" id="discoverQuote"></div>
+      <button class="ghost-next hidden" id="discoverNext" data-next="herWorld">You found them all <span>→</span></button>
+    </div>
+  </section>
+
+  <section class="scene" id="herWorld">
+    <div class="center narrow balloon-scene-center">
+      <p class="eyebrow">HER LITTLE WORLD</p>
+      <h2>Pop a little wish, one balloon at a time.</h2>
+      <p class="body-copy balloon-subtitle">Every balloon is hiding something just for you.</p>
+      <div class="balloon-field" id="worldBalloons"></div>
+      <div class="balloon-reveal" id="worldBalloonReveal">Tap a balloon ✦</div>
+      <button class="ghost-next hidden" id="worldNext" data-next="smile">More of you <span>→</span></button>
+    </div>
+  </section>
+
+  <section class="scene" id="smile">
+    <div class="center narrow">
+      <p class="eyebrow">MAKE HER SMILE</p>
+      <h2>A few wishes for the life ahead.</h2>
+      <div class="fun-grid" id="funGrid"></div>
+      <p class="interaction-label" id="funProgress">0 / 6 notes opened <span>✦</span></p>
+      <button class="ghost-next hidden" id="smileNext" data-next="memories">And now, the life ahead <span>→</span></button>
+    </div>
+  </section>
+
+  <section class="scene memory-scene" id="memories">
+    <div class="memory-header"><span>REAL MEMORIES</span><small>Swipe / drag to explore</small></div>
+    <div class="rope-gallery" id="memoryGallery">
+      <div class="memory-rope" aria-hidden="true"></div>
+      <div class="memory-rope-track" id="memoryTrack"></div>
+    </div>
+    <div class="memory-caption" id="memoryCaption"></div>
+    <div class="memory-controls"><button id="memPrev" aria-label="Previous memory">←</button><span id="memIndex">01 / 05</span><button id="memNext" aria-label="Next memory">→</button></div>
+    <button class="ghost-next floating-next" data-next="videos">Continue <span>→</span></button>
+  </section>
+
+  <section class="scene" id="videos">
+    <div class="center wide video-center">
+      <p class="eyebrow">OUR VIDEOS</p>
+      <h2>Some memories don't stay still.</h2>
+      <div class="video-carousel" id="videoGrid" aria-label="Our videos"><div class="video-track" id="videoTrack"></div></div>
+      <div class="video-controls">
+        <button id="videoPrev" aria-label="Previous video">←</button>
+        <span id="videoIndex">01 / 02</span>
+        <button id="videoNext" aria-label="Next video">→</button>
+      </div>
+      <div class="video-playbar" id="videoPlaybar">
+        <button id="videoPlayPause" type="button" aria-label="Play video">Play <span>▶</span></button>
+        <button id="videoMute" type="button" aria-label="Mute video">Sound <span>⌕</span></button>
+      </div>
+      <button class="ghost-next" data-next="gate">There is one more room <span>→</span></button>
+    </div>
+  </section>
+
+  <section class="scene" id="gate">
+    <div class="center narrow gate-card">
+      <p class="eyebrow">A PRIVATE ROOM</p>
+      <h2>You already know the way in.</h2>
+      <div class="pass-row"><input id="passcode" inputmode="numeric" maxlength="4" placeholder="_ _ _ _" aria-label="Four digit passcode"></div>
+      <div id="hintText" class="hint"></div>
+      <div id="gateMessage" class="gate-message"></div>
+      <div class="gate-actions">
+        <button class="ghost-next hidden" id="gateNext" data-next="privateMemories">Enter the room <span>→</span></button>
+        <button class="ghost-next" id="skipPrivate">I don't remember <span>→</span></button>
+      </div>
+      <p class="gate-note">If the key isn't remembered, that's okay. You can continue to the birthday ending.</p>
+    </div>
+  </section>
+
+  <section class="scene memory-scene" id="privateMemories">
+    <div class="memory-header"><span>PRIVATE MEMORIES</span><small>Swipe / drag to explore</small></div>
+    <div class="rope-gallery" id="privateMemoryGallery">
+      <div class="memory-rope" aria-hidden="true"></div>
+      <div class="memory-rope-track" id="privateMemoryTrack"></div>
+    </div>
+    <div class="memory-caption" id="privateMemoryCaption"></div>
+    <div class="memory-controls"><button id="privateMemPrev" aria-label="Previous private memory">←</button><span id="privateMemIndex">01 / 10</span><button id="privateMemNext" aria-label="Next private memory">→</button></div>
+    <button class="ghost-next floating-next" data-next="story">Continue <span>→</span></button>
+  </section>
+
+  <section class="scene" id="story">
+    <div class="center wide">
+      <p class="eyebrow">OUR STORY</p>
+      <h2>A few little chapters.</h2>
+      <div class="story-window" id="storyWindow"><div class="story-track" id="storyTrack"></div></div>
+      <button class="ghost-next" data-next="imagined">Step into imagination <span>→</span></button>
+    </div>
+  </section>
+
+  <section class="scene memory-scene imagined-memory-scene" id="imagined">
+    <div class="memory-header"><span>IMAGINED MOMENTS</span><small>Swipe / drag to explore</small></div>
+    <div class="imagined-heading-wrap"><p class="eyebrow">MOMENTS WE ONCE IMAGINED</p></div>
+    <div class="rope-gallery" id="imaginedGallery">
+      <div class="memory-rope" aria-hidden="true"></div>
+      <div class="memory-rope-track" id="imaginedTrack"></div>
+    </div>
+    <div class="memory-caption" id="imaginedCaption"><strong>A quiet future moment.</strong><span>Some moments belonged only to imagination.</span></div>
+    <button class="ghost-next floating-next" data-next="message">Continue <span>→</span></button>
+  </section>
+
+  <section class="scene" id="message">
+    <div class="center narrow">
+      <p class="eyebrow">SOMETHING FROM ME</p>
+      <p class="letter-scene-intro">One last thing, Potti…</p>
+      <div class="sealed-letter" id="sealedLetter" aria-label="Open the sealed letter">
+        <div class="letter-shadow"></div>
+        <div class="envelope">
+          <div class="envelope-back"></div>
+          <div class="envelope-paper" id="envelopePaper"><div class="envelope-paper-inner" id="letterContent"></div></div>
+          <div class="envelope-front"></div>
+          <div class="envelope-flap"></div>
+        </div>
+      </div>
+      <div class="tap-hint" id="tapHint">TAP THE LETTER TO OPEN <span>→</span></div>
+      <button class="ghost-next hidden" id="messageNext" data-next="wishes">Continue <span>→</span></button>
+    </div>
+  </section>
+
+  <section class="scene" id="wishes">
+    <div class="center narrow">
+      <p class="eyebrow">WISHES FOR HER LIFE</p>
+      <h2>May life surprise you beautifully.</h2>
+      <div class="wish-reveal" id="wishReveal"><span>Tap here to reveal your wish</span></div>
+      <p class="interaction-label">Tap the card for the next wish <span>→</span></p>
+      <div id="wishNumber" class="tiny">00</div>
+      <button class="ghost-next hidden" id="wishesNext" data-next="family">Carry the wishes forward <span>→</span></button>
+    </div>
+  </section>
+
+
+  <section class="scene family-scene" id="family">
+    <div class="family-wrap">
+      <p class="eyebrow">AN IMAGINED MOMENT</p>
+      <h2>If life had written this chapter for us...</h2>
+      <div class="family-photo"><img src="assets/future/imagined-family.png" alt="Imagined family photograph"></div>
+      <div class="choice-row" id="choiceRow"><button id="chooseTogether">I would choose this</button><button id="choosePath">I would choose my own path</button></div>
+      <div class="authors" id="authors">
+        <div class="author author-h">
+          <div class="avatar-3d avatar-real avatar-hemanth" role="img" aria-label="Chibi boy walking toward Potti"><span class="avatar-frame avatar-frame-a"></span><span class="avatar-frame avatar-frame-b"></span></div>
+          <small>Hemanth</small>
+        </div>
+        <div class="author author-p">
+          <div class="avatar-3d avatar-real avatar-potti" role="img" aria-label="Chibi girl walking toward Hemanth"><span class="avatar-frame avatar-frame-a"></span><span class="avatar-frame avatar-frame-b"></span></div>
+          <small>Potti</small>
+        </div>
+      </div>
+      <div class="branch-message" id="branchMessage"></div>
+      <button class="ghost-next hidden" id="branchNext">My promises <span>→</span></button>
+    </div>
+  </section>
+
+  <section class="scene promises-scene" id="promises">
+    <div class="center narrow">
+      <p class="eyebrow">FOR THE TWO OF US</p>
+      <h2>My promises to you.</h2>
+      <div id="promisesHost" class="promises-host"></div>
+      <button class="ghost-next hidden" id="promisesNext">Continue <span>→</span></button>
+    </div>
+  </section>
+
+  <section class="scene final-wish" id="finalWish">
+    <div class="center narrow">
+      <p class="eyebrow">ONE LAST WISH</p>
+      <h2 id="finalWishTitle">Happy Birthday, Potti. ❤️</h2>
+      <p id="finalWishText" class="body-copy"></p>
+      <p id="signoff" class="signoff"></p>
+      <button class="next-arrow hidden" id="finalNext" aria-label="Next">Next <span>→</span></button>
+    </div>
+  </section>
+
+  <section class="scene" id="yearIntro">
+    <div class="center narrow">
+      <p class="eyebrow">THE YEARLY BIRTHDAY IDEA</p>
+      <h2>This doesn't have to be only your <span id="celebrationYear">2026</span> birthday.</h2>
+      <p class="body-copy">Come back here on your birthday next year. The world will have a new wish waiting for you.</p>
+      <button class="ghost-next" id="yearIntroNext">Continue to the countdown <span>→</span></button>
+    </div>
+  </section>
+
+
+  <section class="scene countdown-scene" id="countdownScene">
+    <div class="center countdown-center">
+      <p class="eyebrow">UNTIL YOUR NEXT BIRTHDAY</p>
+      <div class="countdown-units" id="bigCountdown" aria-live="polite">
+        <div><strong id="bigDays">—</strong><span>Days</span></div>
+        <div><strong id="bigHours">—</strong><span>Hours</span></div>
+        <div><strong id="bigMinutes">—</strong><span>Minutes</span></div>
+        <div><strong id="bigSeconds">—</strong><span>Seconds</span></div>
+      </div>
+      <p class="countdown-subline">A live countdown to 29 September <span id="targetYear">2027</span></p>
+      <div class="end-message" id="endMessage">
+        <p class="eyebrow">A LITTLE MESSAGE TO KEEP</p>
+        <h2>Thank you for making life memorable.</h2>
+        <p class="body-copy">For all the moments, smiles, memories and little pieces of life that became special.</p>
+        <div class="final-line">Once again,<br><strong>Happy Birthday, Bangaram. ❤️</strong></div>
+        <div class="last-star">✦</div>
+      </div>
+    </div>
+  </section>
+</main>
+<script src="content.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

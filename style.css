@@ -1,0 +1,3185 @@
+:root{
+  --bg:#050505; --ivory:#f5efe7; --muted:#aaa19a; --rose:#c99a9d;
+  --gold:#d1b276; --line:rgba(255,255,255,.14); --soft:rgba(255,255,255,.05);
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ivory);font-family:Inter,system-ui,sans-serif}
+body{min-height:100svh}
+button,input{font:inherit} button{color:inherit}
+
+#stars{position:fixed;inset:0;overflow:hidden;z-index:0}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.15;animation:twinkle var(--t) ease-in-out infinite alternate,drift var(--d) linear infinite}
+.star.special{width:4px;height:4px;opacity:.5;box-shadow:0 0 14px 2px rgba(255,255,255,.35)}
+@keyframes twinkle{to{opacity:.65}}
+@keyframes drift{to{transform:translate3d(var(--x),var(--y),0)}}
+.grain,.vignette{position:fixed;inset:0;pointer-events:none;z-index:50}
+.grain{opacity:.07;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+.vignette{box-shadow:inset 0 0 150px 40px #000;opacity:.8}
+
+.scene{position:fixed;inset:0;width:100%;height:100svh;min-height:100svh;display:grid;place-items:center;padding:32px 42px;opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.018);transition:opacity .75s ease,transform .95s cubic-bezier(.2,.8,.2,1),visibility .75s}
+.scene.active{opacity:1;visibility:visible;pointer-events:auto;transform:scale(1)}
+.scene .center{width:min(920px,100%);max-width:100%;height:min(86svh,820px);position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:visible}
+.scene .center.narrow{max-width:760px}.scene .center.wide{max-width:1120px}
+.scene h1,.scene h2,.scene h3{font-family:'Cormorant Garamond',serif;font-weight:500;letter-spacing:-.02em}
+.scene h1{font-size:clamp(66px,10vw,150px);line-height:.88;margin:0}
+.scene h2{font-size:clamp(38px,6vw,78px);line-height:.92;margin:0}
+.scene h2 em{color:var(--rose)}
+.eyebrow{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--muted);margin:0 0 18px}
+.body-copy{color:#c4bbb4;font-weight:300;line-height:1.72;max-width:650px;margin:14px auto 0}
+.interaction-label,.clock-instruction{font-size:11px;letter-spacing:.12em;color:#a49c96;margin:12px auto 0;text-transform:uppercase}
+.ghost-next,.next-arrow{background:transparent;border:1px solid var(--line);border-radius:999px;padding:11px 18px;color:#e7dfd7;cursor:pointer;transition:all .3s ease}
+.ghost-next:hover,.next-arrow:hover{border-color:rgba(255,255,255,.42);transform:translateY(-2px)}
+.ghost-next span,.next-arrow span{margin-left:9px}.hidden{display:none!important}
+
+/* Arrival */
+.arrival-center{justify-content:center!important}
+.light-orb{width:76px;height:76px;border:0;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.98),rgba(255,255,255,.2) 27%,transparent 68%);box-shadow:0 0 60px 10px rgba(255,255,255,.12);cursor:pointer;animation:orb 2.8s ease-in-out infinite}
+.light-orb span{display:block;width:8px;height:8px;border-radius:50%;background:#fff;margin:auto;box-shadow:0 0 25px 8px #fff}
+@keyframes orb{50%{transform:scale(1.08);filter:brightness(1.3)}}
+.arrival-center .eyebrow{margin-top:20px}.arrival-date{font-family:'Cormorant Garamond';font-size:18px;letter-spacing:.28em;color:#8f8882;margin-top:20px;opacity:0;transition:1.2s}
+.arrival-line{font-family:'Cormorant Garamond';font-size:clamp(42px,7vw,88px);line-height:.95;margin-top:22px;opacity:0;transform:translateY(12px);transition:1.2s}
+.arrival-center.revealed .arrival-date,.arrival-center.revealed .arrival-line{opacity:1;transform:none}
+
+/* Birthday intro / life clock */
+.age-button{font-family:'Cormorant Garamond';font-size:clamp(120px,18vw,230px);line-height:.78;color:var(--ivory);text-shadow:0 0 55px rgba(255,255,255,.08)}
+.age-panel{display:flex;justify-content:center;gap:10px;flex-wrap:nowrap;margin-top:28px;width:100%}
+.age-panel div{min-width:94px;padding:12px 10px;border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:14px}
+.age-panel strong{display:block;font-family:'Cormorant Garamond';font-size:28px}.age-panel span{font-size:9px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted)}
+
+/* Discovery */
+.star-hunt{position:relative;width:min(760px,100%);height:min(43svh,390px);margin:18px 0 8px;z-index:3;overflow:visible}
+.hunt-star{position:absolute;width:58px;height:58px;padding:0;display:grid;place-items:center;background:rgba(255,255,255,.008);border:0;border-radius:50%;color:#fff;font:inherit;font-size:24px;line-height:1;cursor:pointer;opacity:.92;z-index:6;touch-action:manipulation;transition:opacity .25s ease,transform .25s ease,text-shadow .25s ease,background .25s ease;filter:drop-shadow(0 0 7px rgba(255,255,255,.24))}
+.hunt-star::after{content:'';position:absolute;inset:8px;border-radius:50%;box-shadow:0 0 0 0 rgba(255,255,255,0);transition:box-shadow .25s ease}
+.hunt-star:hover,.hunt-star:focus-visible{opacity:1;transform:scale(1.12);text-shadow:0 0 18px #fff;outline:none;background:rgba(255,255,255,.05)}
+.hunt-star:hover::after,.hunt-star:focus-visible::after{box-shadow:0 0 18px 2px rgba(255,255,255,.1)}
+.hunt-star.found{opacity:1;transform:scale(1.22);text-shadow:0 0 20px #fff;background:rgba(255,255,255,.055)}
+.hunt-star.found::after{box-shadow:0 0 24px 4px rgba(255,255,255,.16)}
+.hunt-star:disabled{cursor:default}
+.hunt-count{position:relative;z-index:4;color:var(--muted);letter-spacing:.2em;font-size:11px}.discover .ghost-next{margin-top:12px}
+
+/* Her world + smile */
+.reveal-grid,.fun-grid{display:grid;width:min(760px,100%);grid-template-columns:repeat(2,1fr);gap:12px;margin:22px 0 12px}
+.reveal-card,.fun-card{min-height:118px;border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:16px;padding:18px;cursor:pointer;transition:.35s;display:grid;place-items:center;text-align:center}
+.reveal-card:hover,.fun-card:hover{background:rgba(255,255,255,.055);transform:translateY(-2px)}
+.reveal-card span,.fun-card span{font-family:'Cormorant Garamond';font-size:23px;line-height:1.18}
+.fun-card .fun-front{display:block}.fun-card .fun-back{display:none}.fun-card.revealed .fun-front{display:none}.fun-card.revealed .fun-back{display:block;color:#ddd}
+
+/* Wishes / memories */
+.wish-stack{display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;width:min(780px,100%);padding:22px 4px 16px;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.wish-card{min-width:82%;scroll-snap-align:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:28px 18px;font-family:'Cormorant Garamond';font-size:30px;line-height:1.2}
+.memory-scene{display:block;padding:0}
+.memory-header{position:absolute;top:24px;left:30px;right:30px;display:flex;justify-content:space-between;font-size:10px;letter-spacing:.2em;color:var(--muted);z-index:5}
+.rope{position:absolute;top:18%;left:-5%;width:110%;height:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);transform:rotate(-2deg);box-shadow:0 0 15px rgba(255,255,255,.05)}
+.memory-track{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;perspective:1100px;padding-bottom:50px}
+.memory-card{position:absolute;width:min(72vw,450px);aspect-ratio:4/5;background:#0d0d0d;border:1px solid rgba(255,255,255,.16);padding:10px;box-shadow:0 30px 100px rgba(0,0,0,.5);transition:transform .75s cubic-bezier(.2,.8,.2,1),opacity .55s,filter .55s}
+.memory-card img{width:100%;height:100%;object-fit:cover;display:block}.memory-card::after{content:'';position:absolute;bottom:-26px;left:50%;width:1px;height:26px;background:rgba(255,255,255,.35)}
+.memory-card.active{transform:translate3d(0,0,80px) rotate(-1deg);z-index:3}.memory-card.prev{transform:translate3d(-55vw,20px,-100px) rotate(-9deg);opacity:.15;filter:blur(2px)}.memory-card.next{transform:translate3d(55vw,20px,-100px) rotate(9deg);opacity:.2;filter:blur(2px)}.memory-card.hidden-card{opacity:0;pointer-events:none}
+.memory-caption{position:absolute;left:50%;bottom:94px;transform:translateX(-50%);width:min(90%,560px);text-align:center;z-index:5}.memory-caption strong{display:block;font-family:'Cormorant Garamond';font-size:26px}.memory-caption span{color:#a9a19b;font-size:12px}
+.memory-controls{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);display:flex;gap:20px;align-items:center;z-index:6}.memory-controls button{border:0;background:none;font-size:22px;cursor:pointer}.memory-controls span{font-size:10px;letter-spacing:.2em;color:var(--muted)}
+.floating-next{position:absolute;right:26px;bottom:24px;z-index:7;margin:0}
+
+/* Videos */
+#videos{padding:20px 34px}.video-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:min(100%,980px);height:min(40svh,360px);margin:16px 0 10px}
+.video-card{height:100%;border:1px solid var(--line);padding:6px;background:rgba(255,255,255,.025);border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden}.video-card video{width:100%;height:100%;object-fit:contain;display:block;border-radius:9px;background:#000}
+#videos .ghost-next{margin-top:0}
+
+/* Gate */
+.gate-card{max-width:720px}.pass-row{display:flex;justify-content:center;gap:8px;margin:22px auto 10px}.pass-row input{width:210px;background:transparent;border:0;border-bottom:1px solid #777;color:#fff;text-align:center;font-size:24px;letter-spacing:.4em;outline:0;padding:9px}.pass-row button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:9px 15px;cursor:pointer}.hint,.gate-message{min-height:22px;color:#aaa;font-size:12px}.gate-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:10px}.gate-note{margin:12px auto 0;color:#777;font-size:10px;letter-spacing:.04em;max-width:520px}
+
+/* Private memories */
+#privateMemories .center{max-width:1180px}.private-grid{display:flex;gap:14px;width:100%;height:min(50svh,440px);overflow-x:auto;overflow-y:hidden;padding:16px 0 10px;align-items:center;scrollbar-width:thin}
+.private-grid img{flex:0 0 auto;width:235px;height:330px;object-fit:cover;border-radius:12px;border:1px solid var(--line)}
+#privateMemories .ghost-next{margin-top:8px}
+
+/* Story */
+.timeline{width:min(760px,100%);margin:22px 0 10px;text-align:left;display:grid;gap:16px}.timeline-item{border-left:1px solid #555;padding:0 0 10px 22px;position:relative}.timeline-item:before{content:'';position:absolute;left:-4px;top:4px;width:7px;height:7px;background:#fff;border-radius:50%}.timeline-item time{font-size:10px;letter-spacing:.2em;color:var(--gold)}.timeline-item h3{font-size:28px;margin:6px 0}.timeline-item p{color:#aaa;line-height:1.55;margin:0}
+#story .ghost-next{margin-top:10px}
+
+/* Imagined */
+.future-card{width:min(760px,100%);margin:18px auto 8px;border:1px solid var(--line);padding:8px;background:#090909}.future-card img{width:100%;height:min(46svh,410px);object-fit:cover;display:block}.future-caption{padding:14px 8px 8px;text-align:left}.future-caption span{font-size:9px;letter-spacing:.3em;color:#bbb}.future-caption p{margin:6px 0 0;font-family:'Cormorant Garamond';font-size:24px;line-height:1.2}
+
+/* Message */
+.tap-letter{width:min(760px,100%);height:min(32svh,280px);display:grid;place-items:center;padding:24px;font-family:'Cormorant Garamond';font-size:clamp(25px,4vw,42px);line-height:1.25;cursor:pointer}.tap-letter p{margin:0}.message-placeholder{color:#9d958e}.tap-hint{margin:4px auto 0;padding:9px 0;color:#c9c0b8;font-size:11px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;animation:pulseHint 2s ease-in-out infinite}.tap-hint span{margin-left:8px}@keyframes pulseHint{50%{opacity:.5}}
+#message .ghost-next{margin-top:12px}
+
+/* Cake */
+.celebration{background:radial-gradient(circle at 50% 58%,rgba(201,154,157,.12),transparent 30%)}
+.cake-only{justify-content:center!important}.cake-stage{position:relative;width:230px;height:215px;display:grid;place-items:end center;margin-bottom:4px}.cake{position:relative;width:180px;height:160px}.cake-body{position:absolute;left:15px;right:15px;bottom:0;height:75px;background:linear-gradient(#c89da0,#8f656a);border-radius:12px 12px 20px 20px;box-shadow:0 20px 60px rgba(201,154,157,.15)}.cake-top{position:absolute;left:15px;right:15px;bottom:55px;height:45px;background:#f4eee5;border-radius:50%}.candle{position:absolute;width:13px;height:48px;background:#eee4d6;left:83px;bottom:93px;border-radius:5px;z-index:2}.flame{position:absolute;left:82px;bottom:138px;width:16px;height:23px;border-radius:50% 50% 45% 45%;background:#fff0a8;box-shadow:0 0 30px 8px rgba(255,220,120,.35);z-index:3;cursor:pointer;animation:flicker .7s ease-in-out infinite alternate;transition:opacity .2s}.flame.extinguished{opacity:0;pointer-events:none}@keyframes flicker{to{transform:scale(.85) translateY(2px)}}
+.interaction-prompt{background:none;border:0;color:#ddd;font-size:14px;cursor:pointer;margin:2px 0 12px}.interaction-prompt span{margin-left:8px;color:#f0d5a2}
+.confetti-burst{position:absolute;left:50%;top:48%;width:1px;height:1px;pointer-events:none;z-index:5}.confetti-burst .paper{position:absolute;left:0;top:0;width:7px;height:13px;background:#f5efe7;opacity:0;transform:translate(-50%,-50%) rotate(0);animation-delay:var(--delay)}.confetti-burst.burst .paper{animation:paperBurst 1.2s cubic-bezier(.18,.72,.28,1) forwards}
+@keyframes paperBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.5) rotate(0)}12%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--rot)) scale(.9)}}
+.birthday-reveal{width:min(760px,100%);opacity:0;transform:translateY(16px);max-height:0;overflow:hidden;transition:opacity .9s ease,transform .9s ease,max-height .9s ease}.birthday-reveal.visible{opacity:1;transform:none;max-height:220px}.birthday-reveal h2{margin-bottom:8px}.birthday-reveal .body-copy{margin-top:8px}
+#cakeNext{margin-top:8px}
+
+/* Birthday wishes */
+.wish-reveal{width:min(720px,92%);height:min(27svh,230px);display:grid;place-items:center;border:1px solid var(--line);border-radius:20px;margin:20px auto 8px;cursor:pointer;padding:25px;font-family:'Cormorant Garamond';font-size:32px;line-height:1.2}.interaction-label{margin:8px auto 10px}.tiny{color:#777;font-size:10px;letter-spacing:.2em}#wishesNext{margin-top:12px}
+
+/* Featured */
+.featured{display:flex;gap:14px;width:min(1040px,100%);height:min(45svh,390px);overflow-x:auto;overflow-y:hidden;padding:14px 0 10px;align-items:center;scrollbar-width:thin}.featured img{flex:0 0 auto;width:260px;height:330px;object-fit:cover;border-radius:12px;border:1px solid var(--line)}
+#featured .ghost-next{margin-top:8px}
+
+/* Year intro */
+#yearIntro .body-copy{max-width:680px}
+#yearIntro .ghost-next{margin-top:22px}
+
+/* Family choice */
+.family-scene{padding:16px 30px;overflow:hidden}.family-wrap{width:min(980px,100%);height:92svh;max-height:800px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}.family-photo{width:min(860px,100%);height:min(42svh,360px);margin:8px auto;border:1px solid rgba(255,255,255,.16);padding:7px;background:#0a0a0a;transition:1.8s;display:flex;justify-content:center;align-items:center;overflow:hidden}.family-photo img{max-height:100%;max-width:100%;width:auto;display:block;object-fit:contain}.choice-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:5px}.choice-row button{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:999px;padding:11px 16px;cursor:pointer}.authors{height:92px;width:min(760px,100%);position:relative;margin:8px auto 3px;overflow:hidden;opacity:0;pointer-events:none}.author{position:absolute;top:11px;display:flex;flex-direction:column;align-items:center;gap:4px;transition:2.2s cubic-bezier(.2,.8,.2,1)}.author span{width:52px;height:66px;border-radius:50% 50% 25% 25%;background:linear-gradient(#cfc7bd,#5e5854);display:grid;place-items:center;font-family:'Cormorant Garamond';font-size:26px;color:#111;box-shadow:0 0 35px rgba(255,255,255,.08)}.author small{font-size:9px;letter-spacing:.2em;color:#aaa}.author-h{left:0}.author-p{right:0}.authors.active{opacity:1}.authors.active .author-h{left:43%}.authors.active .author-p{right:43%}.authors.hug .author span{transform:scale(1.05) rotate(-2deg)}
+.branch-message{min-height:72px;max-width:760px;font-family:'Cormorant Garamond';font-size:clamp(20px,2.4vw,28px);line-height:1.25;margin:4px auto 0;overflow:auto}.dissolve{animation:dissolve 2.4s forwards}@keyframes dissolve{to{opacity:0;filter:blur(12px);transform:scale(1.04)}}
+#branchNext{margin-top:5px}
+
+/* Final wish + signoff */
+.final-wish .center{height:min(72svh,640px)}.final-wish h2{max-width:850px}.final-wish .body-copy{max-width:760px}.signoff{min-height:58px;position:relative;width:100%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond';font-size:26px;color:#cfc6bf;overflow:visible}.signoff .senior-word,.signoff .hemanth-word{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap;opacity:0}.signoff.animate-signoff .senior-word{opacity:1;animation:seniorStayAndFade 5.3s 1s ease-in-out forwards}.signoff.animate-signoff .senior-word::after{content:'';position:absolute;left:-4%;right:-4%;top:52%;height:2px;background:#d8d0c8;transform:scaleX(0);transform-origin:left center;animation:strikeSenior 2.2s 2.0s ease forwards}.signoff.animate-signoff .hemanth-word{animation:hemanthEnter 1.6s 5.4s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes strikeSenior{to{transform:scaleX(1)}}@keyframes seniorStayAndFade{0%,60%{opacity:1;transform:translate(-50%,-50%) scale(1)}88%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(.96)}}@keyframes hemanthEnter{0%{opacity:0;transform:translate(-50%,-50%) translateY(8px) scale(.97)}100%{opacity:1;transform:translate(-50%,-50%) translateY(0) scale(1)}}
+.next-arrow{margin-top:22px;border:0;border-bottom:1px solid #777;border-radius:0;padding:10px 4px}
+
+/* Countdown */
+.countdown-scene{transition:none}.countdown-center{height:86svh!important;justify-content:center!important}.countdown-units{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:12px;width:min(940px,100%);margin:14px 0 12px}.countdown-units div{display:flex;flex-direction:column;align-items:center;padding:8px 4px}.countdown-units strong{font-family:Inter,system-ui,sans-serif;font-size:clamp(58px,8vw,120px);font-weight:500;line-height:.9;font-variant-numeric:tabular-nums;letter-spacing:.005em}.countdown-units span{margin-top:12px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#9d958e}.countdown-subline{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#8f8882}.countdown-subline span{color:#d7cfc7}.countdown-copy{margin-top:8px}.countdown-access{max-width:760px;margin:8px auto;color:#c2b9b2;line-height:1.65}.year-message{max-width:760px;margin:16px auto;color:#aaa;line-height:1.7}.timer-dock{position:fixed;right:26px;top:20px;z-index:45;min-width:340px;padding:12px 16px;text-align:right;background:rgba(5,5,5,.5);border:1px solid rgba(255,255,255,.16);border-radius:12px;backdrop-filter:blur(7px);color:#b9b0aa}.timer-dock span{display:block;font-size:12px;letter-spacing:.2em;text-transform:uppercase}.timer-dock strong{display:block;margin-top:4px;font-family:Inter,system-ui,sans-serif;font-size:52px;font-weight:500;line-height:1.05;font-variant-numeric:tabular-nums;color:#eee}.timer-dock.hidden{display:none}
+.countdown-center.timer-moved{transform:translateY(-8vh) scale(.88)}.countdown-center.timer-moved .countdown-units{opacity:.1;filter:blur(2px)}.countdown-center.timer-moved .countdown-subline,.countdown-center.timer-moved .countdown-copy,.countdown-center.timer-moved .countdown-access,.countdown-center.timer-moved .year-message{opacity:.28}.end-message{opacity:0;transform:translateY(26px);transition:opacity 1.3s ease,transform 1.3s ease;margin-top:18px}.end-message.visible{opacity:1;transform:none}.final-line{font-family:'Cormorant Garamond';font-size:32px;line-height:1.2;margin:28px 0}.final-line strong{font-size:clamp(38px,6vw,62px);font-weight:600}.last-star{margin-top:30px;font-size:18px;opacity:.65;animation:twinkle 2s infinite alternate}
+
+/* viewport-specific safeguards */
+@media(max-width:1000px){
+  .scene{padding:26px 28px}.age-panel div{min-width:82px}.private-grid img{width:210px;height:300px}.countdown-units{gap:6px}.countdown-units strong{font-size:clamp(52px,9vw,92px)}.timer-dock{min-width:300px}.timer-dock strong{font-size:44px}
+}
+@media(max-width:700px){
+  .scene{padding:18px 16px}.scene .center{height:92svh}.scene h2{font-size:clamp(32px,10vw,50px)}.reveal-grid,.fun-grid{grid-template-columns:1fr 1fr}.reveal-card,.fun-card{min-height:100px}.age-panel{gap:6px}.age-panel div{min-width:60px;padding:9px 5px}.age-panel strong{font-size:24px}.age-panel span{font-size:8px}.video-grid{height:32svh}.private-grid{height:44svh}.private-grid img{width:170px;height:250px}.future-card img{height:38svh}.future-caption p{font-size:21px}.family-photo{height:34svh}.family-wrap{height:94svh}.authors{height:74px}.author span{width:44px;height:56px}.choice-row button{width:min(320px,92vw)}.countdown-units{grid-template-columns:repeat(2,1fr);gap:4px}.countdown-units strong{font-size:clamp(44px,14vw,70px)}.countdown-units span{font-size:9px;margin-top:8px}.countdown-access{font-size:12px}.timer-dock{right:10px;top:10px;min-width:250px;padding:9px 12px}.timer-dock span{font-size:9px}.timer-dock strong{font-size:32px}.final-line strong{font-size:clamp(34px,9vw,48px)}
+}
+
+
+/* ===== 100% browser-zoom viewport safety =====
+   The site never requires browser zoom-out to reach controls.
+   Each active scene is its own scroll container when content is taller
+   than the available viewport. Short scenes remain vertically centered. */
+html,body{overflow:hidden}
+.scene{
+  height:100dvh;
+  min-height:100dvh;
+  max-height:none;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  place-items:start center;
+  scrollbar-width:thin;
+  scrollbar-gutter:stable;
+}
+.scene .center{
+  height:auto !important;
+  min-height:calc(100dvh - 64px);
+  max-height:none;
+  flex:0 0 auto;
+  margin:0 auto;
+  padding:28px 0 34px;
+  justify-content:center;
+}
+.scene .center.narrow,.scene .center.wide{width:min(100%,var(--content-width,1120px))}
+.scene .center.narrow{--content-width:760px}
+.scene .center.wide{--content-width:1120px}
+
+/* Keep fixed/absolute presentation scenes at the viewport size while allowing
+   their content to be reached by scrolling inside the scene. */
+.memory-scene,
+.family-scene,
+.countdown-scene{height:100dvh;min-height:100dvh;max-height:none;}
+.family-scene{overflow-x:hidden;overflow-y:auto}
+.countdown-scene{overflow-x:hidden;overflow-y:auto}
+
+/* Prevent large fixed-height components from forcing clipping at 100% zoom. */
+.video-grid{height:auto;min-height:0;max-height:none;}
+.private-grid{height:auto;min-height:0;max-height:none;}
+.featured{height:auto;min-height:0;max-height:none;}
+.timeline{max-height:none;}
+.future-card img{max-height:410px;}
+
+/* Important controls remain in normal document flow and are never hidden
+   below a viewport edge. */
+#videos .ghost-next,
+#privateMemories .ghost-next,
+#story .ghost-next,
+#imagined .ghost-next,
+#message .ghost-next,
+#wishesNext,
+#featured .ghost-next,
+#yearIntro .ghost-next,
+#branchNext,
+#finalNext{flex:0 0 auto}
+
+/* Cake spacing: keep the candle prompt and revealed birthday copy visually
+   separated from the cake object at every desktop viewport height. */
+.cake-only{gap:10px}
+.cake-stage{flex:0 0 auto}
+.interaction-prompt{flex:0 0 auto;margin:8px 0 12px}
+.birthday-reveal{flex:0 0 auto}
+
+/* Countdown: it may grow vertically at shorter desktop viewports rather than
+   forcing browser zoom-out. */
+.countdown-center{height:auto !important;min-height:calc(100dvh - 64px);padding-bottom:40px}
+
+@media (max-height:850px) and (min-width:701px){
+  .scene{padding-top:22px;padding-bottom:22px}
+  .scene .center{min-height:calc(100dvh - 44px);padding-top:20px;padding-bottom:24px}
+  .scene h2{font-size:clamp(34px,5.4vw,68px)}
+  .eyebrow{margin-bottom:12px}
+  .body-copy{margin-top:10px;line-height:1.58}
+  .reveal-grid,.fun-grid{margin-top:14px}
+  .video-grid{max-height:300px}
+  .private-grid{max-height:330px}
+  .featured{max-height:320px}
+  .future-card img{max-height:320px}
+  .family-photo{max-height:310px}
+}
+
+@media (max-width:700px){
+  .scene{padding:18px 16px}
+  .scene .center{min-height:calc(100dvh - 36px);padding-top:18px;padding-bottom:26px}
+  .countdown-center{min-height:calc(100dvh - 36px)}
+}
+
+/* ===== V4.7 bottom-action system =====
+   Primary navigation stays visually anchored at the bottom of each scene.
+   Longer scenes can still scroll; the action remains reachable without
+   browser zoom-out. The private gate is intentionally excluded so its
+   reviewed layout stays unchanged. */
+.scene:not(#gate) .center > .ghost-next,
+.scene:not(#gate) .center > .next-arrow{
+  position:sticky;
+  bottom:18px;
+  z-index:30;
+  align-self:center;
+  margin-top:auto !important;
+  min-height:52px;
+  min-width:170px;
+  padding:14px 26px;
+  font-size:14px;
+  line-height:1;
+  background:rgba(5,5,5,.68);
+  backdrop-filter:blur(8px);
+  box-shadow:0 10px 35px rgba(0,0,0,.28);
+}
+.scene:not(#gate) .center > .ghost-next.hidden,
+.scene:not(#gate) .center > .next-arrow.hidden{display:none!important}
+
+/* Memory-room CTA remains at the bottom center and stays clear of the
+   memory index controls. */
+#memories .floating-next{
+  position:absolute;
+  left:50%;
+  right:auto;
+  bottom:68px;
+  transform:translateX(-50%);
+  min-height:52px;
+  min-width:190px;
+  padding:14px 28px;
+  font-size:14px;
+  background:rgba(5,5,5,.68);
+  backdrop-filter:blur(8px);
+}
+#memories .floating-next:hover{transform:translateX(-50%) translateY(-2px)}
+
+/* Family branch action: always bottom-center inside the scene. */
+#family #branchNext{
+  position:absolute;
+  left:50%;
+  bottom:4px;
+  transform:translateX(-50%);
+  min-height:52px;
+  min-width:170px;
+  padding:14px 26px;
+  font-size:14px;
+  background:rgba(5,5,5,.68);
+  backdrop-filter:blur(8px);
+  z-index:20;
+}
+#family #branchNext:hover{transform:translateX(-50%) translateY(-2px)}
+
+/* Videos: give the grid a real, predictable height so the section remains
+   fully reachable at normal 100% browser zoom. */
+#videos .center{min-height:calc(100dvh - 44px)}
+#videos .video-grid{
+  height:min(52svh,500px);
+  min-height:320px;
+  margin:12px 0 8px;
+}
+#videos .video-card{height:100%;min-height:0}
+#videos .video-card video{height:100%;width:100%;object-fit:contain}
+#videos .ghost-next{margin-top:auto !important}
+
+/* Wishes: show one complete card at a time so the next quote never leaks in
+   from the side and the last quote does not visually repeat. */
+#wishes .wish-reveal{height:min(29svh,250px);min-height:220px}
+#wishes .interaction-label{min-height:18px}
+
+/* Keep the verified private-room layout exactly as reviewed. */
+#gate .center{position:relative}
+
+/* Sealed letter for Something From Me */
+.sealed-letter{width:min(560px,90vw);height:245px;display:grid;place-items:end center;margin:6px auto 0;perspective:1200px;cursor:pointer;position:relative}
+.letter-shadow{position:absolute;left:50%;bottom:18px;width:76%;height:24px;transform:translateX(-50%);background:rgba(0,0,0,.5);filter:blur(14px);border-radius:50%}
+.envelope{position:relative;width:min(500px,100%);height:215px;transform-style:preserve-3d;filter:drop-shadow(0 22px 42px rgba(0,0,0,.38));}
+.envelope-back,.envelope-front,.envelope-flap{position:absolute;inset:0;border:1px solid rgba(255,255,255,.16);background:#151211;}
+.envelope-back{border-radius:10px;box-shadow:inset 0 0 40px rgba(255,255,255,.025)}
+.envelope-front{clip-path:polygon(0 0,50% 56%,100% 0,100% 100%,0 100%);background:linear-gradient(135deg,#1b1816,#0d0d0d);z-index:4}
+.envelope-flap{clip-path:polygon(0 0,100% 0,50% 66%);transform-origin:top center;transition:transform 1s cubic-bezier(.2,.75,.25,1);z-index:6;background:linear-gradient(135deg,#211d1a,#12100f);backface-visibility:hidden;}
+.envelope-paper{position:absolute;left:8%;right:8%;bottom:18px;height:174px;padding:20px 22px;background:#f3eee7;color:#24211f;border-radius:3px 3px 2px 2px;z-index:3;transform:translateY(104px);transition:transform 1.2s cubic-bezier(.2,.8,.2,1),box-shadow 1.2s;box-shadow:0 8px 20px rgba(0,0,0,.25);overflow:auto;}
+.envelope-paper-inner{font-family:'Cormorant Garamond',serif;font-size:24px;line-height:1.28;text-align:left;min-height:100%;display:flex;align-items:center;justify-content:center}
+.envelope-paper-inner p{margin:0}
+.sealed-letter.opened .envelope-flap{transform:rotateX(180deg)}
+.sealed-letter.opened .envelope-paper{transform:translateY(-78px);box-shadow:0 18px 36px rgba(0,0,0,.42)}
+#message .tap-hint{margin-top:0}
+#message .center > .ghost-next{margin-top:auto !important}
+
+/* Branch-B choice letter: same physical language as the main sealed letter,
+   but compact enough to stay comfortably inside the family-choice scene. */
+.choice-letter-wrap{width:min(760px,100%);display:flex;justify-content:center;align-items:center;min-height:230px;padding:4px 0}
+.choice-envelope{position:relative;width:min(560px,88vw);height:210px;perspective:1100px;}
+.choice-envelope::after{content:'';position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);width:75%;height:20px;border-radius:50%;background:rgba(0,0,0,.45);filter:blur(12px);z-index:0}
+.choice-envelope-paper{position:absolute;left:8%;right:8%;bottom:16px;height:178px;background:#f3eee7;color:#24211f;padding:22px;border-radius:3px;transform:translateY(72px);transition:transform 1.3s cubic-bezier(.2,.8,.2,1),box-shadow 1.3s;z-index:2;overflow:auto;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.choice-envelope-paper p{font-family:'Cormorant Garamond',serif;font-size:22px;line-height:1.25;margin:0}
+.choice-envelope-front,.choice-envelope-flap{position:absolute;inset:0;border:1px solid rgba(255,255,255,.15);background:#151211;border-radius:8px}
+.choice-envelope-front{clip-path:polygon(0 0,50% 56%,100% 0,100% 100%,0 100%);z-index:4;background:linear-gradient(135deg,#1b1816,#0d0d0d)}
+.choice-envelope-flap{clip-path:polygon(0 0,100% 0,50% 66%);transform-origin:top center;transition:transform 1s cubic-bezier(.2,.75,.25,1);z-index:6;background:linear-gradient(135deg,#211d1a,#12100f);backface-visibility:hidden}
+.choice-envelope.open .choice-envelope-flap{transform:rotateX(180deg)}
+.choice-envelope.open .choice-envelope-paper{transform:translateY(-58px);box-shadow:0 18px 34px rgba(0,0,0,.4)}
+#family .branch-message{min-height:230px;margin-top:4px;display:flex;align-items:center;justify-content:center;overflow:visible}
+
+/* Sign-off: keep 'Signing off,' untouched. Strike ONLY 'your senior', then
+   replace that exact word-position with Hemanth. */
+.signoff .signing-prefix,.signoff .senior-word,.signoff .hemanth-word{position:absolute;top:50%;white-space:nowrap;transform:translateY(-50%)}
+.signoff .signing-prefix{left:50%;transform:translate(calc(-100% - 4px),-50%)}
+.signoff .senior-word{left:50%;transform:translate(0,-50%);opacity:0}
+.signoff .senior-word::after{content:'';position:absolute;left:-3%;right:-3%;top:52%;height:2px;background:#d8d0c8;transform:scaleX(0);transform-origin:left center}
+.signoff .hemanth-word{left:50%;transform:translate(0,-50%);opacity:0}
+.signoff.animate-signoff .senior-word{opacity:1}
+.signoff.animate-signoff .senior-word::after{animation:strikeSeniorOnly 1.8s 1.2s ease forwards}
+.signoff.animate-signoff .senior-word{animation:seniorOnlyFade 1.1s 3.4s ease forwards}
+.signoff.animate-signoff .hemanth-word{animation:hemanthOnlyEnter 1.4s 4.1s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes strikeSeniorOnly{to{transform:scaleX(1)}}
+@keyframes seniorOnlyFade{to{opacity:0;transform:translate(0,-50%) translateY(1px)}}
+@keyframes hemanthOnlyEnter{0%{opacity:0;transform:translate(0,-50%) translateY(8px)}100%{opacity:1;transform:translate(0,-50%) translateY(0)}}
+
+/* Top-right timer remains visible but larger and easier to read. */
+.timer-dock{min-width:380px;padding:14px 18px}
+.timer-dock span{font-size:12px}
+.timer-dock strong{font-size:58px}
+
+@media(max-width:1000px){
+  #videos .video-grid{height:min(54svh,460px);min-height:300px}
+  .timer-dock{min-width:320px}.timer-dock strong{font-size:48px}
+}
+@media(max-width:700px){
+  .scene:not(#gate) .center > .ghost-next,
+  .scene:not(#gate) .center > .next-arrow{bottom:12px;min-height:50px;min-width:155px;padding:13px 22px;font-size:13px}
+  #memories .floating-next{bottom:64px;min-height:50px;min-width:180px;padding:13px 22px}
+  #family #branchNext{bottom:2px;min-height:50px;min-width:155px;padding:13px 22px}
+  #videos .video-grid{height:min(48svh,420px);min-height:240px}
+  .sealed-letter{height:225px}.envelope{height:195px}.envelope-paper{height:160px}.envelope-paper-inner{font-size:21px}
+  .choice-letter-wrap{min-height:205px}.choice-envelope{height:190px}.choice-envelope-paper{height:155px}.choice-envelope-paper p{font-size:19px}
+  .timer-dock{right:10px;top:10px;min-width:290px}.timer-dock strong{font-size:40px}
+}
+
+#wishReveal.complete{cursor:default;box-shadow:inset 0 0 40px rgba(201,154,157,.05)}
+
+/* V4.8 — expanded family photograph and full letter reveal */
+.family-wrap{width:min(1180px,96vw);height:94dvh;max-height:none;}
+.family-photo{width:min(1120px,94vw);height:min(58dvh,560px);margin:10px auto 14px;padding:8px;}
+.family-photo img{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;object-position:center;}
+
+/* The sealed letter starts as an envelope. After opening, the paper physically
+   slides completely out and expands into a full readable letter on-screen. */
+#message .sealed-letter{width:min(820px,94vw);height:min(65dvh,610px);min-height:430px;margin:6px auto 0;position:relative;}
+#message .envelope{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);width:min(560px,84vw);height:235px;z-index:2;}
+#message .envelope-paper{left:50%;right:auto;bottom:22px;width:min(760px,88vw);height:min(58dvh,560px);padding:28px 34px;transform:translate(-50%,170px) scale(.48);transform-origin:center bottom;z-index:3;overflow:auto;transition:transform 1.6s cubic-bezier(.18,.8,.18,1),box-shadow 1.6s, z-index 0s linear 1.25s;}
+#message .envelope-paper-inner{font-size:clamp(24px,2.2vw,32px);line-height:1.35;}
+#message .sealed-letter.opened .envelope-paper{transform:translate(-50%,-4px) scale(1);z-index:8;box-shadow:0 30px 70px rgba(0,0,0,.48);}
+#message .sealed-letter.opened .envelope-flap{transform:rotateX(180deg);}
+#message .sealed-letter.opened .envelope-front{opacity:.25;transition:opacity .7s ease 1.15s;}
+
+@media(max-height:850px) and (min-width:701px){
+  .family-photo{height:min(55dvh,500px);max-height:none}
+  #message .sealed-letter{height:min(64dvh,560px);min-height:400px}
+  #message .envelope-paper{height:min(55dvh,500px)}
+}
+@media(max-width:700px){
+  .family-wrap{height:94dvh}
+  .family-photo{width:94vw;height:min(52dvh,480px);max-height:none}
+  #message .sealed-letter{height:64dvh;min-height:430px}
+  #message .envelope{width:min(500px,86vw);height:205px}
+  #message .envelope-paper{width:88vw;height:54dvh;padding:20px 22px}
+}
+
+/* ===== Video-reference feature pass ===== */
+.arrival-quote{max-width:820px;margin:22px auto 0;color:#d9d0c8;font-family:'Cormorant Garamond',serif;font-size:clamp(21px,2.5vw,34px);line-height:1.12;opacity:0;transform:translateY(14px);transition:opacity 1s ease .35s,transform 1s ease .35s}
+.arrival-center.revealed .arrival-quote{opacity:1;transform:none}
+.moon-orb{width:94px;height:94px;border:0;border-radius:50%;background:radial-gradient(circle at 36% 32%,#fff 0 8%,#eee8df 9% 32%,#bbb5ad 33% 62%,#77716b 63% 100%);box-shadow:0 0 55px 12px rgba(255,245,225,.17),inset -13px -15px 24px rgba(0,0,0,.35);cursor:pointer;position:relative;animation:moonFloat 3.2s ease-in-out infinite}
+.moon-orb::before,.moon-orb::after{content:'';position:absolute;border-radius:50%;background:rgba(90,84,77,.18)}
+.moon-orb::before{width:15px;height:15px;left:28px;top:27px}.moon-orb::after{width:10px;height:10px;right:24px;bottom:25px}
+.moon-orb span{display:none}.moon-orb.moon-touched{animation:moonVanish .9s ease forwards}
+@keyframes moonFloat{50%{transform:translateY(-7px) scale(1.03)}}
+@keyframes moonVanish{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.8);filter:blur(12px)}}
+
+/* Birthday / Video 2 particle reveal */
+.birthday-center{gap:4px}.birthday-stage{position:relative;width:min(560px,92vw);height:min(40svh,360px);display:grid;place-items:center}.particle-burst{position:absolute;inset:0;pointer-events:none;overflow:visible}.particle-burst i{position:absolute;left:50%;top:50%;width:4px;height:4px;border-radius:50%;background:#fff;opacity:0;box-shadow:0 0 10px rgba(255,190,220,.8);transform:translate(-50%,-50%);}
+.particle-burst i:nth-child(3n){background:#dca5b8}.particle-burst i:nth-child(4n){background:#d7bc82}.particle-burst.burst i{animation:particleFly 1.9s cubic-bezier(.2,.75,.2,1) var(--delay) both}
+@keyframes particleFly{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}15%{opacity:.9}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--rot)) scale(1)}}
+.birthday-dear{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3vw,34px);margin:8px 0 0;color:#d9b6bc}.birthday-reveal{opacity:0;transform:translateY(12px) scale(.98);transition:.9s ease;pointer-events:none}.birthday-reveal.visible{opacity:1;transform:none}.birthday-reveal h2{font-size:clamp(36px,6vw,72px)}
+
+/* Video 3 balloon feature */
+.balloon-scene-center{justify-content:center}.balloon-field{position:relative;width:min(760px,100%);height:min(36svh,300px);margin:8px auto 0}.balloon{position:absolute;width:58px;height:76px;border:0;background:transparent;cursor:pointer;animation:balloonFloat 3.5s ease-in-out infinite alternate;transition:transform .25s,opacity .3s;z-index:2}.balloon:nth-child(1){left:12%;top:32%}.balloon:nth-child(2){left:29%;top:8%;animation-delay:.4s}.balloon:nth-child(3){left:47%;top:28%;animation-delay:.8s}.balloon:nth-child(4){left:64%;top:10%;animation-delay:.2s}.balloon:nth-child(5){left:80%;top:34%;animation-delay:.7s}.balloon:nth-child(6){left:90%;top:12%;animation-delay:.5s}.balloon span{display:block;width:48px;height:62px;margin:auto;border-radius:50% 50% 45% 45%;background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.65),transparent 18%),linear-gradient(135deg,#d8a7bd,#8d6f9c);box-shadow:inset -8px -10px 16px rgba(0,0,0,.22),0 8px 20px rgba(0,0,0,.25);position:relative}.balloon span::after{content:'';position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);border-left:6px solid transparent;border-right:6px solid transparent;border-top:10px solid #9c7890}.balloon i{display:block;width:1px;height:30px;background:rgba(255,255,255,.3);margin:-1px auto 0}.balloon.popped{animation:balloonPop .34s ease forwards;pointer-events:none}.balloon.popped span{filter:blur(2px)}
+.balloon-1 span{background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.65),transparent 18%),linear-gradient(135deg,#b8d6d0,#668f95)}.balloon-2 span{background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.65),transparent 18%),linear-gradient(135deg,#e6c184,#a76d66)}.balloon-3 span{background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.65),transparent 18%),linear-gradient(135deg,#d8a7bd,#9d6b84)}.balloon-4 span{background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.65),transparent 18%),linear-gradient(135deg,#b6b4df,#746f9f)}.balloon-5 span{background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.65),transparent 18%),linear-gradient(135deg,#d4d39a,#8f8b5c)}
+@keyframes balloonFloat{to{transform:translateY(-10px) rotate(2deg)}}@keyframes balloonPop{0%{transform:scale(1);opacity:1}55%{transform:scale(1.18);opacity:.9}100%{transform:scale(.05);opacity:0}}
+.balloon-reveal{min-height:48px;margin:0 auto;color:#e6d5d0;font-family:'Cormorant Garamond',serif;font-size:clamp(20px,2.5vw,30px);opacity:.72;transition:.3s}.balloon-reveal.show{opacity:1;color:var(--ivory)}
+
+/* Video 1 memory deck */
+.memory-deck{position:absolute;left:50%;top:46%;width:min(680px,92vw);height:min(52svh,470px);transform:translate(-50%,-50%);perspective:1200px}.memory-deck-card{position:absolute;left:50%;top:50%;width:min(245px,42vw);height:min(330px,48svh);padding:9px 9px 36px;background:#f4efe8;color:#292622;border-radius:2px;box-shadow:0 28px 60px rgba(0,0,0,.5);transform-origin:center bottom;transition:transform .7s cubic-bezier(.2,.8,.2,1),opacity .5s,filter .5s;cursor:pointer}.memory-deck-card img{width:100%;height:100%;object-fit:cover;display:block}.memory-deck-card span{position:absolute;left:8px;right:8px;bottom:8px;font:14px/1.1 'Cormorant Garamond',serif;text-align:center}.memory-deck-card.active{transform:translate(-50%,-50%) rotate(-1deg) translateZ(50px);z-index:5}.memory-deck-card.left{transform:translate(calc(-50% - 185px),calc(-50% + 7px)) rotate(-8deg) translateZ(-60px);z-index:3}.memory-deck-card.right{transform:translate(calc(-50% + 185px),calc(-50% + 7px)) rotate(8deg) translateZ(-60px);z-index:3}.memory-deck-card.back{opacity:0;transform:translate(-50%,-50%) scale(.82);z-index:1}.memory-caption{position:absolute;left:50%;bottom:84px;transform:translateX(-50%);width:min(88%,620px);text-align:center;z-index:8}.memory-caption strong{display:block;font-family:'Cormorant Garamond';font-size:24px;font-weight:500}.memory-caption span{display:block;margin-top:5px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+/* Video 4: continuous Polaroid conveyor */
+.polaroid-window{width:min(1180px,100%);height:min(47svh,390px);overflow:hidden;position:relative;margin:10px auto 20px;mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%)}.polaroid-track{display:flex;gap:18px;width:max-content;height:100%;align-items:center;animation:polaroidScroll 34s linear infinite}.polaroid-window:hover .polaroid-track,.polaroid-window:active .polaroid-track{animation-play-state:paused}.moving-polaroid{flex:0 0 160px;width:160px;margin:0;padding:8px 8px 30px;background:#f2eee8;color:#26231f;box-shadow:0 18px 36px rgba(0,0,0,.42);transform:rotate(-2deg);font-family:'Cormorant Garamond',serif}.moving-polaroid:nth-child(3n){transform:rotate(3deg) translateY(-8px)}.moving-polaroid:nth-child(4n){transform:rotate(-5deg) translateY(6px)}.polaroid-photo{height:210px;background:#ddd}.polaroid-photo img{width:100%;height:100%;object-fit:cover;display:block}.moving-polaroid figcaption{padding:8px 3px 0;font-size:15px;line-height:1.05;text-align:center}.polaroid-scene .center{max-width:1220px}
+@keyframes polaroidScroll{from{transform:translateX(0)}to{transform:translateX(-33.333%)}}
+
+/* Video 5: horizontal story-card rail */
+.story-window{width:min(1180px,100%);height:min(45svh,330px);overflow:hidden;position:relative;margin:14px auto 20px;mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}.story-track{display:flex;gap:12px;width:max-content;height:100%;align-items:stretch;animation:storyScroll 30s linear infinite}.story-window:hover .story-track{animation-play-state:paused}.story-card{flex:0 0 210px;width:210px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));padding:18px 15px;text-align:center;display:flex;flex-direction:column;justify-content:center;box-shadow:0 12px 30px rgba(0,0,0,.2)}.story-icon{font-size:20px;color:var(--gold);margin-bottom:10px}.story-card time{font-size:9px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}.story-card h3{font-size:25px;margin:8px 0}.story-card p{font-size:13px;line-height:1.45;color:#c8c0b8;margin:0}.story-track::after{content:'';display:block;flex:0 0 210px}@keyframes storyScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* Video 6: six-card 3D flip interaction */
+.promises-wrap{width:min(820px,100%);margin:4px auto 0}.promise-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,42px);margin:0 0 12px;color:#dfc28c}.promise-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.promise-card{height:118px;border:1px solid rgba(255,255,255,.12);background:transparent;padding:0;cursor:pointer;perspective:900px;position:relative}.promise-front,.promise-back{position:absolute;inset:0;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;backface-visibility:hidden;transition:transform .65s cubic-bezier(.2,.8,.2,1),background .4s}.promise-front{background:rgba(255,255,255,.045);transform:rotateY(0)}.promise-front b{font-size:25px;font-weight:400}.promise-front small{margin-top:7px;letter-spacing:.1em;color:#d4ccc4}.promise-back{background:rgba(201,154,157,.12);transform:rotateY(180deg)}.promise-back strong{font-family:'Cormorant Garamond';font-size:21px}.promise-back em{font-style:normal;font-size:11px;line-height:1.35;color:#d7cfc8;margin-top:5px}.promise-card.flipped .promise-front{transform:rotateY(-180deg)}.promise-card.flipped .promise-back{transform:rotateY(0)}
+
+/* Family photograph: taller frame + no cropping/compression. */
+.family-wrap{width:min(1220px,96vw);height:auto;min-height:96dvh;padding:14px 0 76px}.family-photo{width:min(1180px,94vw);height:min(68dvh,660px);margin:8px auto 14px;padding:10px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.025);display:flex;align-items:center;justify-content:center}.family-photo img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}.family-photo.dissolve{animation:familyDissolve 1.2s ease forwards}@keyframes familyDissolve{to{opacity:0;filter:blur(10px);transform:scale(1.03)}}
+.family-scene{overflow:auto}.family-scene h2{text-align:center}.choice-row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.authors{position:relative;width:min(600px,90vw);height:170px;margin:10px auto 0;opacity:0;pointer-events:none}.authors.active{opacity:1}.author{position:absolute;top:30px;display:flex;flex-direction:column;align-items:center;gap:5px;transition:transform 2.2s cubic-bezier(.2,.8,.2,1)}.author span{width:60px;height:60px;border:1px solid rgba(255,255,255,.2);border-radius:50%;display:grid;place-items:center;font-family:'Cormorant Garamond';font-size:30px;background:rgba(255,255,255,.05)}.author small{color:var(--muted)}.author-h{left:12%}.author-p{right:12%}.authors.active .author-h{transform:translateX(170px)}.authors.active .author-p{transform:translateX(-170px)}.authors.hug .author-h{transform:translateX(210px)}.authors.hug .author-p{transform:translateX(-210px)}
+
+/* Video 1 letter presentation, including the physical paper rise. */
+#message .sealed-letter{height:min(66dvh,620px);min-height:430px}.message-placeholder{color:#777}.tap-hint{font-size:11px;letter-spacing:.14em;color:#a49c96;text-transform:uppercase}
+
+/* Final / countdown */
+#endMessage{opacity:0;transform:translateY(22px);transition:opacity 1.2s ease,transform 1.2s ease;margin-top:35px}.countdown-center.timer-moved #endMessage.visible{opacity:1;transform:none}.countdown-center.timer-moved{justify-content:center}.timer-dock{position:fixed;z-index:80;right:20px;top:18px}
+
+/* Screen robustness: content may scroll inside a scene instead of being clipped. */
+.scene{overflow:auto;overscroll-behavior:contain}.scene .center{height:auto;min-height:calc(100dvh - 40px);max-height:none}.memory-scene{overflow:hidden}.scene .ghost-next{flex-shrink:0}
+.rotate-prompt{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.94);display:grid;place-items:center;text-align:center;padding:30px}.rotate-prompt>div{max-width:340px}.rotate-icon{display:block;font-size:64px;animation:rotatePhone 1.8s ease-in-out infinite}.rotate-prompt h2{font-family:'Cormorant Garamond';font-size:38px;margin:10px 0}.rotate-prompt p{color:#aaa}.hidden{display:none!important}
+@keyframes rotatePhone{50%{transform:rotate(90deg)}}
+
+@media(max-width:850px){
+  .memory-deck-card{width:min(210px,42vw);height:min(290px,48svh)}.memory-deck-card.left{transform:translate(calc(-50% - 125px),calc(-50% + 7px)) rotate(-8deg) translateZ(-60px)}.memory-deck-card.right{transform:translate(calc(-50% + 125px),calc(-50% + 7px)) rotate(8deg) translateZ(-60px)}
+  .moving-polaroid{flex-basis:135px;width:135px}.polaroid-photo{height:175px}.story-card{flex-basis:185px;width:185px}.promise-card{height:105px}.family-photo{height:min(65dvh,560px)}
+}
+@media(max-width:700px){
+  .arrival-quote{font-size:20px}.birthday-stage{height:240px}.balloon-field{height:220px}.balloon{transform:scale(.82)}.balloon:hover{transform:scale(.88)}
+  .memory-deck{height:310px}.memory-deck-card{width:170px;height:240px}.memory-deck-card.left{transform:translate(calc(-50% - 90px),calc(-50% + 7px)) rotate(-8deg)}.memory-deck-card.right{transform:translate(calc(-50% + 90px),calc(-50% + 7px)) rotate(8deg)}.memory-caption{bottom:74px}
+  .promise-grid{gap:7px}.promise-card{height:92px}.promise-front b{font-size:21px}.promise-front small{font-size:10px}.promise-back strong{font-size:18px}.promise-back em{font-size:10px}
+  .family-photo{width:94vw;height:min(64dvh,500px)}.family-wrap{padding-bottom:82px}
+}
+
+/* =========================================================
+   MANUAL FEATURE PASS — visual behavior locked to the supplied
+   reference-video features. No autoplay rails.
+   ========================================================= */
+
+/* 01 — realistic moon */
+.realistic-moon{width:clamp(170px,22vh,240px);height:clamp(170px,22vh,240px);border:0;border-radius:50%;padding:0;background:transparent;position:relative;cursor:pointer;animation:moonFloat 3.2s ease-in-out infinite;filter:drop-shadow(0 0 28px rgba(244,238,220,.18));}
+.realistic-moon .moon-surface{position:absolute;inset:0;border-radius:50%;background:url('assets/moon-realistic.png') center/cover no-repeat;box-shadow:inset -18px -18px 35px rgba(0,0,0,.34), inset 12px 8px 18px rgba(255,255,255,.12);display:block;overflow:hidden;}
+.realistic-moon .moon-glow{position:absolute;inset:-12%;border-radius:50%;background:radial-gradient(circle,rgba(255,248,232,.20) 0 34%,rgba(255,245,225,.10) 48%,transparent 72%);filter:blur(12px);display:block;pointer-events:none;}
+.realistic-moon.moon-touched{animation:moonVanish .9s ease forwards}
+@keyframes moonVanish{0%{opacity:1;transform:scale(1)}45%{opacity:.9;transform:scale(1.16);filter:blur(1px) brightness(1.2)}100%{opacity:0;transform:scale(.12);filter:blur(12px);pointer-events:none}}
+
+/* 02 — cake forms exactly in stages: base -> layer -> cream -> decoration -> candle -> flame */
+#birthdayIntro .birthday-center{justify-content:center!important;gap:8px}
+#birthdayIntro .birthday-stage{height:min(45dvh,390px);min-height:270px;display:grid;place-items:center;position:relative}
+#layerCake{position:relative;width:min(360px,42vw);height:250px;display:block;}
+#layerCake>*{position:absolute;left:50%;transform:translateX(-50%) scale(.82);opacity:0;pointer-events:none;transition:opacity .65s ease,transform .75s cubic-bezier(.2,.8,.2,1),filter .6s ease}
+#layerCake .cake-base{bottom:25px;width:270px;height:72px;border-radius:14px 14px 22px 22px;background:linear-gradient(180deg,#7b3e2d 0%,#5c281f 100%);box-shadow:0 24px 45px rgba(0,0,0,.42),inset 0 8px 8px rgba(255,255,255,.08)}
+#layerCake .cream-base{bottom:83px;width:274px;height:28px;border-radius:50%;background:linear-gradient(#fffaf1,#e9ddd0);box-shadow:0 4px 12px rgba(255,245,230,.16)}
+#layerCake .cake-upper{bottom:92px;width:250px;height:64px;border-radius:12px 12px 20px 20px;background:linear-gradient(180deg,#8b4936,#632b20);box-shadow:inset 0 7px 8px rgba(255,255,255,.08)}
+#layerCake .cream-upper{bottom:145px;width:254px;height:26px;border-radius:50%;background:linear-gradient(#fffaf3,#eadfd2);box-shadow:0 4px 12px rgba(255,245,230,.16)}
+#layerCake .cake-decor{bottom:151px;width:246px;height:58px;display:flex;align-items:flex-end;justify-content:space-around;gap:12px;background:transparent}
+#layerCake .cake-decor i{display:block;width:34px;height:26px;border-radius:50% 50% 42% 42%;background:linear-gradient(180deg,#f8e9d8,#fffdf7);box-shadow:0 5px 9px rgba(0,0,0,.15);position:relative}
+#layerCake .cake-decor i::after{content:'';position:absolute;left:5px;right:5px;top:-7px;height:12px;border-radius:50%;background:#fffaf0;box-shadow:0 -2px 5px rgba(255,255,255,.35)}
+#layerCake .cake-candle{bottom:176px;width:18px;height:68px;background:transparent;display:block}
+#layerCake .candle-body{position:absolute;bottom:0;left:2px;width:14px;height:52px;border-radius:5px;background:repeating-linear-gradient(135deg,#f5eee2 0 7px,#c88e92 7px 11px);box-shadow:0 4px 9px rgba(0,0,0,.22)}
+#layerCake .candle-wick{position:absolute;bottom:51px;left:8px;width:2px;height:9px;background:#30231e;border-radius:2px}
+#layerCake .flame{position:absolute;bottom:57px;left:-1px;width:20px;height:29px;border:0;border-radius:50% 50% 45% 45%;background:radial-gradient(circle at 50% 70%,#fff9c7 0 28%,#ffd56a 29% 58%,#ff9e3c 59% 100%);box-shadow:0 0 30px 9px rgba(255,206,110,.30);cursor:pointer;animation:flicker .7s ease-in-out infinite alternate;pointer-events:auto}
+#layerCake .flame.hidden{display:none!important}
+#layerCake.formed-1 .cake-base,#layerCake.formed-2 .cream-base,#layerCake.formed-3 .cake-upper,#layerCake.formed-4 .cream-upper,#layerCake.formed-5 .cake-decor,#layerCake.formed-6 .cake-candle{opacity:1;transform:translateX(-50%) scale(1)}
+#layerCake.formed-5 .cake-decor{filter:drop-shadow(0 4px 8px rgba(255,245,230,.12))}
+#layerCake .flame.extinguished{opacity:0!important;pointer-events:none}
+#flamePrompt{margin-top:0}
+
+/* 03 — life clock centered in the middle; Continue stays at the bottom */
+#lifeClock .center{justify-content:center;min-height:100dvh;padding-bottom:76px}
+#lifeClock .age-button{margin-top:0}
+#lifeClock .age-panel{margin-top:24px}
+#lifeClock .ghost-next{position:absolute;left:50%;bottom:20px;transform:translateX(-50%)}
+#lifeClock .ghost-next:hover{transform:translateX(-50%) translateY(-2px)}
+
+/* 04 — discovery quote gets more breathing room and stays centered */
+#discover .center{justify-content:center;min-height:100dvh;padding-bottom:76px}
+#discover .discover-quote{margin-top:30px!important;font-family:'Cormorant Garamond',serif;font-size:clamp(27px,3.2vw,46px)!important;line-height:1.22!important;max-width:880px!important;color:#f2e9df}
+#discover .discover-quote + .ghost-next{position:absolute;left:50%;bottom:20px;transform:translateX(-50%)}
+#discover .discover-quote + .ghost-next:hover{transform:translateX(-50%) translateY(-2px)}
+
+/* 08 — Video 1 E rope + clipped Polaroids, manual drag only */
+#memories{overflow:hidden}
+#memories .memory-header{top:22px}
+.rope-gallery{position:absolute;left:50%;top:50%;width:min(1180px,92vw);height:min(52dvh,430px);transform:translate(-50%,-50%);overflow:hidden;touch-action:none;cursor:grab}
+.rope-gallery.dragging{cursor:grabbing}
+.memory-rope{position:absolute;left:-4%;right:-4%;top:47px;height:2px;background:linear-gradient(90deg,transparent 0%,rgba(240,228,214,.62) 7%,rgba(240,228,214,.75) 50%,rgba(240,228,214,.62) 93%,transparent 100%);box-shadow:0 0 10px rgba(255,245,230,.08);z-index:1}
+.memory-rope-track{position:absolute;left:0;top:0;height:100%;display:flex;align-items:flex-start;gap:34px;padding-top:58px;will-change:transform;transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+.memory-rope-card{position:relative;flex:0 0 230px;width:230px;height:310px;padding:8px 8px 31px;background:#f3eee6;color:#2c2925;box-shadow:0 22px 46px rgba(0,0,0,.48);transform:rotate(-2deg);user-select:none;}
+.memory-rope-card:nth-child(2n){transform:rotate(2.5deg) translateY(6px)}
+.memory-rope-card:nth-child(3n){transform:rotate(-4deg) translateY(2px)}
+.memory-rope-card.active{box-shadow:0 28px 62px rgba(0,0,0,.56)}
+.memory-rope-card .memory-pin{position:absolute;top:-12px;left:50%;width:12px;height:22px;transform:translateX(-50%);border-radius:5px 5px 3px 3px;background:linear-gradient(90deg,#b98d58,#efd3a5,#9a7042);box-shadow:0 2px 5px rgba(0,0,0,.35);z-index:3}
+.memory-rope-card .memory-pin::after{content:'';position:absolute;left:5px;top:7px;width:2px;height:16px;background:rgba(90,60,35,.55)}
+.memory-rope-card .memory-photo{width:100%;height:244px;background:#ddd;overflow:hidden}
+.memory-rope-card .memory-photo img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.memory-rope-card>span{position:absolute;left:10px;right:10px;bottom:8px;font:15px/1.05 'Cormorant Garamond',serif;text-align:center}
+#memories .memory-caption{bottom:65px;z-index:10;pointer-events:none}
+#memories .memory-caption strong{font-size:22px}
+#memories .memory-controls{bottom:22px;z-index:11}
+#memories .floating-next{left:50%;right:auto;bottom:62px;transform:translateX(-50%);z-index:12}
+#memories .floating-next:hover{transform:translateX(-50%) translateY(-2px)}
+
+/* 09 — original video aspect ratio, one video visible at a time, manual swipe only */
+#videos .video-center{justify-content:center;padding-bottom:70px}
+#videos .video-carousel{display:flex;width:min(86vw,680px);height:min(64dvh,700px);margin:12px auto 4px;overflow:hidden;touch-action:none;cursor:grab;transition:transform .55s cubic-bezier(.2,.8,.2,1);align-items:center}
+#videos .video-carousel:active{cursor:grabbing}
+#videos .video-slide{flex:0 0 100%;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+#videos .video-slide video{width:auto;height:auto;max-height:64dvh;max-width:86vw;object-fit:contain;display:block;border-radius:0;background:transparent;box-shadow:0 22px 70px rgba(0,0,0,.48)}
+#videos .video-controls{display:flex;align-items:center;justify-content:center;gap:18px;margin:4px 0 8px;color:var(--muted);font-size:10px;letter-spacing:.2em}
+#videos .video-controls button{border:0;background:none;color:#e7dfd7;font-size:22px;cursor:pointer;padding:4px 8px}
+#videos .ghost-next{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);margin:0}
+#videos .ghost-next:hover{transform:translateX(-50%) translateY(-2px)}
+
+/* 11 + 17 — Video 4: horizontal Polaroid rail, manual only */
+.polaroid-window{height:min(49dvh,410px)!important;overflow:hidden;cursor:grab;touch-action:none;margin:14px auto 20px!important;mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)!important;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)!important}
+.polaroid-window.dragging{cursor:grabbing}
+.polaroid-track{animation:none!important;transform:translate3d(0,0,0);transition:transform .35s ease;gap:20px!important;align-items:center!important;padding:0 16px}
+.moving-polaroid{flex:0 0 185px!important;width:185px!important;padding:8px 8px 31px!important;cursor:grab}
+.moving-polaroid:active{cursor:grabbing}
+.polaroid-photo{height:245px!important}
+.polaroid-scene .center{justify-content:center}
+.polaroid-scene .center h2{font-family:'Segoe Script','Brush Script MT',cursive;color:var(--gold);font-size:clamp(36px,4.8vw,62px);letter-spacing:0;margin:0 0 2px}
+.polaroid-scene .center>.eyebrow{display:none}
+.polaroid-scene .ghost-next{margin-top:0}
+
+/* 12 — Video 5: yellow timeline line + dots + horizontal cards, manual only */
+#story .center{justify-content:center;padding-bottom:70px}
+#story .center h2{font-family:'Segoe Script','Brush Script MT',cursive;color:var(--gold);font-size:clamp(38px,5vw,68px);letter-spacing:0;margin:0 0 2px}
+#story .center>.eyebrow{display:none}
+.story-window{height:min(48dvh,360px)!important;margin:14px auto 18px!important;mask-image:none!important;-webkit-mask-image:none!important;overflow:hidden;cursor:grab;touch-action:none}
+.story-window.dragging{cursor:grabbing}
+.story-window::before{content:'';position:absolute;left:0;right:0;top:31px;height:2px;background:linear-gradient(90deg,transparent 0%,rgba(226,191,87,.75) 8%,rgba(226,191,87,.9) 50%,rgba(226,191,87,.75) 92%,transparent 100%);z-index:3}
+.story-window::after{content:'';position:absolute;left:7%;right:7%;top:24px;height:16px;background:radial-gradient(circle at 4% 50%,#e5c55f 0 3px,transparent 4px),radial-gradient(circle at 28% 50%,#e5c55f 0 3px,transparent 4px),radial-gradient(circle at 52% 50%,#e5c55f 0 3px,transparent 4px),radial-gradient(circle at 76% 50%,#e5c55f 0 3px,transparent 4px),radial-gradient(circle at 96% 50%,#e5c55f 0 3px,transparent 4px);z-index:4;pointer-events:none}
+.story-track{animation:none!important;gap:12px!important;transform:translate3d(0,0,0);transition:transform .35s ease;align-items:stretch!important;padding:55px 12px 8px}
+.story-track::after{display:none!important}
+.story-card{flex:0 0 210px!important;width:210px!important;border:1px solid rgba(221,190,100,.22)!important;border-radius:12px!important;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02))!important;padding:18px 15px!important;box-shadow:0 12px 30px rgba(0,0,0,.25)!important}
+.story-icon{color:var(--gold)!important}.story-card time{color:var(--gold)!important}.story-card h3{font-family:'Cormorant Garamond',serif;color:#f1e7d8}.story-card p{color:#c8c0b8}
+#story .ghost-next{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);margin:0}
+#story .ghost-next:hover{transform:translateX(-50%) translateY(-2px)}
+
+/* Make all center compositions genuinely centered while actions remain at the bottom. */
+#arrival .center,#birthdayIntro .center,#lifeWishes .center,#smile .center,#herWorld .center,#wishes .center{justify-content:center}
+
+@media(max-width:850px){
+  #layerCake{width:320px;height:235px}
+  #layerCake .cake-base{width:235px}.layer-cake .cream-base{width:239px}.layer-cake .cake-upper{width:218px}.layer-cake .cream-upper{width:222px}.layer-cake .cake-decor{width:216px}.layer-cake .cake-candle{bottom:168px}
+  .rope-gallery{width:94vw;height:49dvh}.memory-rope-card{flex-basis:190px;width:190px;height:275px}.memory-rope-card .memory-photo{height:214px}.memory-rope-track{gap:24px}
+  #videos .video-carousel{width:88vw;height:62dvh}.polaroid-window{width:94vw!important}.moving-polaroid{flex-basis:155px!important;width:155px!important}.polaroid-photo{height:205px!important}.story-card{flex-basis:180px!important;width:180px!important}
+}
+@media(max-width:700px){
+  .realistic-moon{width:170px;height:170px}
+  #layerCake{transform:scale(.88);transform-origin:center}
+  #discover .discover-quote{font-size:28px!important;max-width:92vw!important}
+  .memory-rope-card{flex-basis:170px;width:170px;height:248px}.memory-rope-card .memory-photo{height:191px}.memory-rope-card>span{font-size:13px}.memory-rope-track{gap:18px}
+  #memories .memory-caption{bottom:64px}.floating-next{bottom:54px!important}
+  #videos .video-carousel{height:60dvh;width:90vw}.video-slide video{max-height:60dvh;max-width:90vw}
+  .moving-polaroid{flex-basis:140px!important;width:140px!important}.polaroid-photo{height:184px!important}.story-card{flex-basis:165px!important;width:165px!important}.story-card h3{font-size:22px}.story-card p{font-size:12px}
+}
+
+/* 13 — same Video 1 E photo/memory feature, explicitly separated from real memories. */
+#imagined .memory-caption{bottom:64px}
+#imagined .floating-next{left:50%;right:auto;bottom:62px;transform:translateX(-50%)}
+#imagined .floating-next:hover{transform:translateX(-50%) translateY(-2px)}
+#imagined .memory-header{top:22px}
+#imagined .memory-rope-card{filter:saturate(.92)}
+#imagined .memory-rope-card>span{font-size:14px}
+#imagined .memory-caption strong{font-size:22px}
+@media(max-width:700px){#imagined .memory-caption{bottom:64px}#imagined .memory-rope-card>span{font-size:13px}}
+
+.realistic-moon::before,.realistic-moon::after{display:none!important}
+
+
+/* FINAL PRECISION PASS — interaction alignment and reference-faithful motion */
+.realistic-moon{width:190px;height:190px;border:0;border-radius:50%;position:relative;background:transparent;cursor:pointer;padding:0;filter:drop-shadow(0 0 28px rgba(255,245,225,.16));animation:moonBreath 4.5s ease-in-out infinite}
+.realistic-moon .moon-surface{position:absolute;inset:0;border-radius:50%;background:url('assets/moon-realistic.png') center/cover no-repeat;box-shadow:inset -28px -18px 42px rgba(0,0,0,.52),inset 12px 5px 22px rgba(255,255,255,.14),0 0 32px rgba(255,244,220,.12);mix-blend-mode:normal}
+.realistic-moon .moon-glow{inset:-18%;background:radial-gradient(circle,rgba(255,248,232,.20) 0 35%,rgba(255,245,225,.08) 48%,transparent 73%);filter:blur(14px)}
+@keyframes moonBreath{50%{transform:scale(1.018);filter:drop-shadow(0 0 36px rgba(255,245,225,.22))}}
+
+/* Cake: every ingredient enters separately and settles into a physically stacked cake. */
+#layerCake{width:min(390px,44vw);height:280px}
+#layerCake>*{transition:opacity .75s ease,transform .85s cubic-bezier(.18,.82,.18,1),filter .7s ease}
+#layerCake .cake-base{bottom:28px;width:286px;height:70px;border-radius:14px 14px 24px 24px;background:linear-gradient(180deg,#9b533d 0%,#61281f 100%);box-shadow:0 22px 42px rgba(0,0,0,.5),inset 0 8px 9px rgba(255,255,255,.09),inset 0 -12px 14px rgba(35,8,5,.28)}
+#layerCake .cream-base{bottom:83px;width:290px;height:25px;border-radius:50%;background:linear-gradient(180deg,#fffdf8,#e9ded3);box-shadow:0 5px 13px rgba(255,245,230,.22)}
+#layerCake .cake-upper{bottom:98px;width:262px;height:62px;border-radius:12px 12px 22px 22px;background:linear-gradient(180deg,#a45a42,#672c21);box-shadow:inset 0 7px 8px rgba(255,255,255,.08),inset 0 -10px 12px rgba(45,10,7,.2)}
+#layerCake .cream-upper{bottom:147px;width:267px;height:25px;border-radius:50%;background:linear-gradient(180deg,#fffefa,#eadfd3);box-shadow:0 5px 14px rgba(255,245,230,.24)}
+#layerCake .cake-decor{bottom:151px;width:260px;height:62px;align-items:flex-end}
+#layerCake .cake-decor i{width:38px;height:29px;border-radius:55% 55% 42% 42%;background:linear-gradient(180deg,#fffdf8,#e9ddd0);box-shadow:0 6px 10px rgba(0,0,0,.18);transform-origin:50% 100%}
+#layerCake .cake-decor i::after{height:16px;top:-9px;left:4px;right:4px;background:#fffaf0;box-shadow:0 -2px 6px rgba(255,255,255,.35)}
+#layerCake .cake-candle{bottom:177px;width:20px;height:70px}
+#layerCake .candle-body{width:15px;height:53px;background:repeating-linear-gradient(135deg,#fff4e7 0 7px,#d39aa0 7px 12px);box-shadow:0 4px 9px rgba(0,0,0,.25)}
+#layerCake .flame{bottom:58px;width:21px;height:31px;filter:drop-shadow(0 0 10px rgba(255,192,77,.55))}
+#layerCake.formed-1 .cake-base,#layerCake.formed-2 .cream-base,#layerCake.formed-3 .cake-upper,#layerCake.formed-4 .cream-upper,#layerCake.formed-5 .cake-decor,#layerCake.formed-6 .cake-candle{opacity:1;transform:translateX(-50%) scale(1)}
+#layerCake.formed-2 .cream-base{animation:creamSettle .65s ease both}
+#layerCake.formed-4 .cream-upper{animation:creamSettle .65s ease both}
+@keyframes creamSettle{0%{filter:blur(5px);transform:translateX(-50%) scaleX(.72) scaleY(.55)}70%{transform:translateX(-50%) scaleX(1.05) scaleY(1.08)}100%{filter:none;transform:translateX(-50%) scale(1)}}
+
+/* Celebration is a dense 0–6 second background burst, not a tiny single pop. */
+#birthdayIntro.birthday-celebration .birthday-stage::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 48%,rgba(255,215,150,.18),transparent 22%,transparent 58%);animation:celebrationGlow 3.8s ease-out both;pointer-events:none}
+.celebration-particle{position:absolute;left:50%;top:50%;width:var(--size);height:var(--size);border-radius:45%;background:#fff;opacity:0;box-shadow:0 0 10px rgba(255,220,180,.75)}
+.celebration-particle:nth-child(3n){background:#dca5b8}.celebration-particle:nth-child(4n){background:#e6c96f}.celebration-particle:nth-child(5n){background:#f3efe7;border-radius:1px}
+.birthday-celebration .celebration-particle{animation:celebrationFly var(--dur) cubic-bezier(.16,.75,.2,1) var(--delay) both}
+@keyframes celebrationFly{0%{opacity:0;transform:translate(-50%,-50%) scale(.15) rotate(0)}10%{opacity:1}34%{opacity:.95}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.7) rotate(var(--rot))}}
+@keyframes celebrationGlow{0%{opacity:0;transform:scale(.5)}18%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.7)}}
+#birthdayReveal{position:relative;z-index:5}
+
+/* Discovery: quote and action occupy separate vertical bands. */
+#discover .center{padding-bottom:90px}
+#discover .discover-quote{margin-top:38px!important;max-width:980px!important;padding:0 20px;position:relative;z-index:2}
+#discover .discover-quote + .ghost-next{bottom:18px;z-index:8}
+
+/* Rope cards: clips must sit exactly on the rope even when cards are tilted. */
+.memory-rope-card{--card-rot:-2deg;transform:rotate(var(--card-rot));}
+.memory-rope-card:nth-child(2n){--card-rot:2.5deg;transform:rotate(var(--card-rot)) translateY(6px)}
+.memory-rope-card:nth-child(3n){--card-rot:-4deg;transform:rotate(var(--card-rot)) translateY(2px)}
+.memory-rope-card .memory-pin{transform:translateX(-50%) rotate(calc(var(--card-rot) * -1));transform-origin:50% 12px;}
+.memory-rope-card .memory-pin::after{transform:rotate(var(--card-rot));transform-origin:top center}
+#memories .memory-caption,#imagined .memory-caption{bottom:108px}
+#memories .floating-next,#imagined .floating-next{bottom:62px}
+
+/* Videos: the viewport clips only the track; each video keeps its native aspect ratio. */
+#videos .video-carousel{position:relative;display:block;width:min(88vw,760px);height:min(68dvh,720px);overflow:hidden;touch-action:pan-y;cursor:grab}
+#videos .video-track{display:flex;width:100%;height:100%;transition:transform .55s cubic-bezier(.2,.8,.2,1);will-change:transform}
+#videos .video-slide{flex:0 0 100%;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+#videos .video-slide video{width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;background:transparent;box-shadow:none;border-radius:0}
+#videos .video-carousel:active{cursor:grabbing}
+
+/* Manual-only rails everywhere. No CSS animation is allowed on these tracks. */
+.polaroid-track,.story-track{animation:none!important}
+
+/* Letter: envelope opens first, then the paper physically rises out before text is revealed. */
+#message .sealed-letter{height:min(66dvh,620px);min-height:430px}
+#message .envelope{z-index:4}
+#message .envelope-paper{transform:translate(-50%,130px) scale(.54);opacity:.15;transition:transform 1.55s cubic-bezier(.18,.82,.18,1),opacity .45s ease,box-shadow 1.4s;}
+#message .sealed-letter.opening .envelope-flap{transform:rotateX(180deg)}
+#message .sealed-letter.opening .envelope-paper{transform:translate(-50%,60px) scale(.72);opacity:.8}
+#message .sealed-letter.opened .envelope-paper{transform:translate(-50%,-4px) scale(1);opacity:1}
+#message .sealed-letter.opened .envelope-front{opacity:.12;transition:opacity .7s ease .7s}
+#message .tap-hint{position:relative;z-index:12;margin-top:-2px}
+
+@media(max-width:850px){
+  .realistic-moon{width:175px;height:175px}
+  #layerCake{transform:scale(.9)}
+  #videos .video-carousel{width:90vw;height:62dvh}
+}
+@media(max-width:700px){
+  #discover .discover-quote{font-size:29px!important;line-height:1.18!important;margin-top:34px!important}
+  #memories .memory-caption,#imagined .memory-caption{bottom:112px}
+  #videos .video-carousel{height:58dvh;width:92vw}
+  #videos .video-slide video{max-width:92vw;max-height:58dvh}
+}
+
+/* Alignment safeguards: content and navigation never share the same vertical band. */
+.typed-letter{white-space:pre-line;margin:0;font-family:'Cormorant Garamond',serif;font-size:clamp(22px,2.1vw,31px);line-height:1.45;text-align:left}
+#discover .star-hunt{height:min(31dvh,300px);margin:14px 0 2px}
+#discover .discover-quote{margin-top:28px!important;margin-bottom:18px!important}
+#discover .discover-quote + .ghost-next{bottom:14px}
+#memories .memory-caption,#imagined .memory-caption{bottom:124px}
+#memories .memory-controls{bottom:20px}
+#memories .floating-next,#imagined .floating-next{bottom:64px}
+#imagined .memory-caption{bottom:124px}
+#videos .video-controls{position:relative;z-index:5}
+#videos .ghost-next{bottom:14px}
+
+@media(max-height:760px) and (min-width:701px){
+  #discover .star-hunt{height:25dvh}
+  #discover .discover-quote{font-size:34px!important;margin-top:22px!important}
+  #memories .memory-caption,#imagined .memory-caption{bottom:118px}
+}
+
+/* =========================================================
+   PRECISION PASS 02 — 100% zoom + collision corrections
+   ========================================================= */
+
+/* 01 — arrival: deliberate breathing line in the approved quotation */
+.arrival-quote-gap{display:block;height:.55em}
+
+/* 01 — moon: local texture only; no external dependency */
+.realistic-moon .moon-surface{
+  background:
+    radial-gradient(circle at 32% 28%,rgba(255,255,255,.34),transparent 26%),
+    radial-gradient(circle at 68% 72%,rgba(0,0,0,.36),transparent 46%),
+    url('assets/moon-realistic.png') center/cover no-repeat;
+  filter:contrast(1.12) brightness(1.05);
+}
+.realistic-moon .moon-glow{background:radial-gradient(circle,rgba(255,248,232,.24) 0 28%,rgba(255,245,225,.12) 44%,transparent 70%);}
+
+/* 02 — cake: make each cream/frosting layer visibly settle into the structure */
+#layerCake .cream-base,#layerCake .cream-upper{
+  border-radius:50% 50% 44% 44%;
+  box-shadow:0 5px 14px rgba(255,245,230,.18), inset 0 -5px 7px rgba(210,195,178,.28);
+}
+#layerCake .cream-base::after,#layerCake .cream-upper::after{
+  content:'';
+  position:absolute;
+  left:7%;right:7%;bottom:-8px;height:15px;
+  border-radius:0 0 48% 48%;
+  background:linear-gradient(#f7eee3,#ded0c2);
+  opacity:.9;
+}
+#layerCake .cake-base::after,#layerCake .cake-upper::after{
+  content:'';
+  position:absolute;left:7%;right:7%;top:7px;height:10px;
+  border-radius:50%;background:rgba(255,238,220,.10);
+}
+#layerCake .cake-base,#layerCake .cake-upper{position:absolute;overflow:visible}
+
+/* 03 — life clock: use the unused vertical room at normal browser zoom */
+#lifeClock .center{width:min(980px,94vw);height:min(88svh,660px);padding:38px 28px 92px;justify-content:center}
+#lifeClock .age-button{font-size:clamp(140px,18vw,240px)}
+#lifeClock .age-panel{min-height:min(45svh,360px);padding:34px 34px;margin-top:28px;border:1px solid rgba(255,255,255,.11);border-radius:20px;width:min(880px,100%);background:rgba(255,255,255,.018);display:flex;align-items:center;justify-content:center}
+#lifeClock .age-panel div{min-width:112px;padding:16px 12px}
+
+/* 04 — discovery: quote and CTA occupy separate, non-overlapping bands */
+#discover .center{padding:18px 28px 112px}
+#discover .star-hunt{height:min(30dvh,270px);margin:12px 0 4px}
+#discover .discover-quote{
+  width:min(900px,94vw);min-height:118px;margin:18px auto 0!important;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 24px 6px!important;font-size:clamp(25px,3vw,42px)!important;
+}
+#discover .discover-quote + .ghost-next{bottom:22px}
+
+/* 08/13 — rope cards: move clips down to the rope and keep caption/CTA separate */
+.memory-rope-card .memory-pin{
+  top:-8px;
+  transform:translateX(-50%) rotate(calc(var(--card-rot) * -1)) translateY(2px);
+}
+.memory-rope-card .memory-pin::after{transform:rotate(var(--card-rot));}
+#memories .memory-caption,#imagined .memory-caption{
+  bottom:142px;width:min(86vw,760px);max-height:68px;
+}
+#memories .memory-caption strong,#imagined .memory-caption strong{font-size:20px;line-height:1.08}
+#memories .memory-controls{bottom:22px}
+#memories .floating-next,#imagined .floating-next{bottom:54px}
+#imagined .memory-caption{bottom:112px}
+
+/* 09 — videos: native aspect ratio, no crop, visible custom controls */
+#videos .video-center{padding-bottom:92px}
+#videos .video-carousel{width:min(88vw,820px);height:min(56dvh,540px);margin:10px auto 4px}
+#videos .video-track{height:100%;width:100%}
+#videos .video-slide{height:100%;overflow:hidden}
+#videos .video-slide video{
+  display:block;width:auto!important;height:auto!important;
+  max-width:100%!important;max-height:100%!important;
+  object-fit:contain!important;background:transparent!important;
+  border-radius:0!important;box-shadow:0 18px 50px rgba(0,0,0,.42)!important;
+}
+#videos .video-controls{margin:6px 0 4px}
+#videos .video-playbar{
+  display:flex;justify-content:center;gap:10px;min-height:34px;margin:0 auto;
+}
+#videos .video-playbar button{
+  border:1px solid var(--line);background:rgba(0,0,0,.25);border-radius:999px;
+  color:#eee6de;padding:7px 14px;font-size:11px;letter-spacing:.08em;cursor:pointer;
+}
+#videos .video-playbar button:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.05)}
+#videos .video-error::after{content:'This memory video could not be loaded.';display:block;color:#a99f97;font-size:12px}
+
+/* 11/17 — polaroids: preserve the complete image, widen the paper, darken captions */
+.polaroid-window{height:min(49dvh,400px)!important}
+.moving-polaroid{
+  flex:0 0 230px!important;width:230px!important;
+  padding:9px 9px 34px!important;color:#171411!important;
+  background:#f4efe7!important;
+}
+.polaroid-photo{height:260px!important;background:#ddd!important}
+.polaroid-photo img{object-fit:contain!important;background:#ddd!important}
+.moving-polaroid figcaption{
+  color:#171411!important;font-weight:600;font-size:16px!important;line-height:1.12!important;
+}
+.polaroid-scene .center{padding-bottom:76px}
+.polaroid-scene .ghost-next{margin-top:8px!important}
+
+/* 13 — explicit section heading; the large narrative title remains underneath */
+.imagined-heading{
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:10px!important;letter-spacing:.34em!important;text-transform:uppercase;
+  color:var(--muted)!important;margin:0 0 6px!important;
+}
+
+/* 14 — main letter fits at 100% zoom while retaining physical envelope movement */
+#message .center{height:min(82svh,650px);padding-bottom:18px}
+#message .sealed-letter{height:min(50dvh,410px);min-height:300px;margin:2px auto 0}
+#message .envelope{width:min(500px,82vw);height:190px}
+#message .envelope-paper{height:154px;bottom:14px;padding:16px 20px}
+#message .envelope-paper-inner{font-size:21px;line-height:1.24}
+#message .sealed-letter.opened .envelope-paper{transform:translate(-50%,-8px) scale(1)}
+#message .tap-hint{margin-top:-2px}
+#message .center > .ghost-next{margin-top:8px!important}
+
+/* 19/20B — the envelope should read as a real letter, not a floating quote */
+#family .family-wrap{height:min(82svh,680px);max-height:none}
+#family .family-photo{height:min(34svh,290px);margin:6px auto}
+#family .branch-message{min-height:210px;margin-top:4px}
+.choice-letter-wrap{min-height:220px}
+.choice-envelope{height:198px}
+.choice-envelope-paper{
+  height:184px;padding:20px 28px;text-align:left;overflow:auto;
+  display:block;
+}
+.choice-envelope-paper p{font-size:20px;line-height:1.22;margin:0 0 10px}
+.choice-envelope-paper .choice-letter-greeting,
+.choice-envelope-paper .choice-letter-closing{font-style:italic;color:#6e5c4d}
+.choice-envelope-paper .choice-letter-closing{margin-top:14px}
+
+/* 100% desktop viewport safeguard for shorter laptop displays */
+@media (min-width:851px) and (max-height:820px){
+  .scene{padding:24px 30px}
+  .scene .center{height:min(88svh,650px)}
+  #lifeClock .center{height:min(88svh,650px);padding-top:24px}
+  #lifeClock .age-button{font-size:clamp(110px,15vw,190px)}
+  #lifeClock .age-panel{margin-top:18px;padding:20px 26px 26px}
+  #discover .star-hunt{height:24dvh}
+  #discover .discover-quote{font-size:32px!important;min-height:98px;margin-top:12px!important}
+  #memories .memory-caption,#imagined .memory-caption{bottom:126px}
+  #memories .floating-next,#imagined .floating-next{bottom:44px}
+  #videos .video-carousel{height:min(50dvh,420px)}
+  #videos .video-center{padding-bottom:80px}
+  #message .center{height:88svh}
+  #message .sealed-letter{height:min(46dvh,350px)}
+  #family .family-wrap{height:88svh}
+  #family .family-photo{height:min(29dvh,250px)}
+  #family .branch-message{min-height:190px}
+}
+
+/* 100% mobile landscape */
+@media (max-width:850px){
+  #lifeClock .center{height:88svh;padding:24px 16px 82px}
+  #lifeClock .age-panel{padding:20px 10px}
+  #lifeClock .age-panel div{min-width:78px}
+  #discover .center{padding-bottom:96px}
+  #discover .star-hunt{height:27dvh}
+  #discover .discover-quote{font-size:28px!important;min-height:100px}
+  .moving-polaroid{flex-basis:190px!important;width:190px!important}
+  .polaroid-photo{height:214px!important}
+  .moving-polaroid figcaption{font-size:14px!important}
+  #videos .video-carousel{height:52dvh;width:92vw}
+  #message .sealed-letter{height:44dvh;min-height:270px}
+  #message .envelope{height:170px}
+  #family .family-wrap{height:84svh}
+  #family .family-photo{height:30dvh}
+}
+
+/* 13 heading sits above the rope without stealing its interaction space */
+#imagined .imagined-heading-wrap{position:absolute;left:50%;top:58px;transform:translateX(-50%);z-index:4;text-align:center;pointer-events:none}
+#imagined .imagined-heading-wrap .eyebrow{margin:0;color:#d6cec5;font-size:12px;letter-spacing:.28em}
+
+
+/* ===== Letter feature precision pass — based only on the supplied Video 7 interaction =====
+/* Do not alter the global scene system. These rules are scoped to the two letter scenes. */
+#message .letter-scene-intro{
+  margin:0 auto 10px;
+  color:#d7cfc7;
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(19px,2.1vw,26px);
+  line-height:1.15;
+}
+#message .sealed-letter{
+  width:min(560px,88vw);
+  height:min(43dvh,360px);
+  min-height:270px;
+  margin:0 auto;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  perspective:1200px;
+  cursor:pointer;
+  position:relative;
+}
+#message .envelope{
+  width:min(500px,82vw);
+  height:min(205px,24dvh);
+  min-height:170px;
+  position:absolute;
+  left:50%;
+  bottom:22px;
+  transform:translateX(-50%);
+  transform-style:preserve-3d;
+  filter:drop-shadow(0 22px 42px rgba(0,0,0,.38));
+}
+#message .envelope-back,
+#message .envelope-front,
+#message .envelope-flap{
+  inset:0;
+}
+#message .envelope-flap{
+  transform-origin:top center;
+  transition:transform .9s cubic-bezier(.2,.75,.25,1);
+  z-index:6;
+}
+#message .envelope-paper{
+  left:7%;right:7%;bottom:18px;
+  width:auto;
+  height:min(235px,30dvh);
+  padding:20px 24px;
+  z-index:3;
+  overflow:hidden;
+  border-radius:4px;
+  transform:translateY(105px) scale(.96);
+  transform-origin:center bottom;
+  opacity:1;
+  transition:transform 1.45s cubic-bezier(.18,.82,.18,1),box-shadow 1.1s ease;
+  background:
+    repeating-linear-gradient(to bottom,rgba(102,91,78,.11) 0,rgba(102,91,78,.11) 1px,transparent 1px,transparent 28px),
+    #f4eee5;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+#message .envelope-paper-inner{
+  display:block;
+  min-height:100%;
+  font-family:Inter,system-ui,sans-serif;
+  font-size:clamp(11px,1.15vw,15px);
+  line-height:1.65;
+  text-align:left;
+  color:#3b342d;
+}
+#message .letter-writing-area{width:100%;padding-top:2px}
+#message .letter-writing-area p{margin:0 0 12px;min-height:1em}
+#message .letter-writing-area .letter-greeting{font-weight:600}
+#message .letter-writing-area .letter-closing{margin-top:4px}
+#message .sealed-letter.opening .envelope-flap,
+#message .sealed-letter.opened .envelope-flap{transform:rotateX(180deg)}
+#message .sealed-letter.opening .envelope-paper{transform:translateY(45px) scale(.98);box-shadow:0 14px 30px rgba(0,0,0,.3)}
+#message .sealed-letter.opened .envelope-paper{transform:translateY(-128px) scale(1.02);box-shadow:0 24px 48px rgba(0,0,0,.42);z-index:8}
+#message .sealed-letter.opened .envelope-front{opacity:.16;transition:opacity .65s ease .8s}
+#message .tap-hint{position:relative;z-index:14;margin:4px auto 0;min-height:30px}
+#message #messageNext{margin-top:6px!important;position:relative;z-index:20}
+
+/* 20B uses the same physical envelope → paper → writing language. */
+.choice-letter-wrap{width:min(620px,92vw);min-height:330px;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;position:relative}
+.choice-letter-intro{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2vw,25px);color:#d7cfc7;margin:0 0 8px}
+.choice-envelope{width:min(500px,82vw);height:205px;position:relative;perspective:1200px;overflow:visible}
+.choice-envelope-paper{position:absolute;left:6%;right:6%;bottom:18px;height:230px;padding:22px 24px;background:repeating-linear-gradient(to bottom,rgba(102,91,78,.11) 0,rgba(102,91,78,.11) 1px,transparent 1px,transparent 28px),#f4eee5;color:#3b342d;border-radius:4px;z-index:3;overflow:hidden;transform:translateY(105px) scale(.96);transform-origin:center bottom;transition:transform 1.45s cubic-bezier(.18,.82,.18,1),box-shadow 1.1s;box-shadow:0 8px 20px rgba(0,0,0,.25);font-family:Inter,system-ui,sans-serif;font-size:12px;line-height:1.6;text-align:left}
+.choice-envelope-front,.choice-envelope-flap{position:absolute;inset:0;border:1px solid rgba(255,255,255,.16);background:#151211}
+.choice-envelope-front{clip-path:polygon(0 0,50% 56%,100% 0,100% 100%,0 100%);background:linear-gradient(135deg,#1b1816,#0d0d0d);z-index:4}
+.choice-envelope-flap{clip-path:polygon(0 0,100% 0,50% 66%);transform-origin:top center;transition:transform .9s cubic-bezier(.2,.75,.25,1);z-index:6;background:linear-gradient(135deg,#211d1a,#12100f);backface-visibility:hidden}
+.choice-envelope.opening .choice-envelope-flap,.choice-envelope.open .choice-envelope-flap{transform:rotateX(180deg)}
+.choice-envelope.open .choice-envelope-paper{transform:translateY(-118px) scale(1.02);box-shadow:0 24px 48px rgba(0,0,0,.42);z-index:8}
+.choice-letter-writing p{margin:0 0 10px;min-height:1em}
+.choice-letter-writing p:first-child{font-weight:600}
+.choice-letter-hint{margin-top:7px;color:#a49c96;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+
+@media(max-width:700px){
+  #message .letter-scene-intro{margin-bottom:6px}
+  #message .sealed-letter{height:38dvh;min-height:245px}
+  #message .envelope{height:165px;min-height:150px;width:88vw}
+  #message .envelope-paper{height:210px;padding:16px 18px}
+  #message .sealed-letter.opened .envelope-paper{transform:translateY(-112px) scale(1.01)}
+  .choice-letter-wrap{min-height:300px}
+  .choice-envelope{height:170px;width:88vw}
+  .choice-envelope-paper{height:210px;padding:16px 18px;font-size:11px}
+  .choice-envelope.open .choice-envelope-paper{transform:translateY(-108px) scale(1.01)}
+}
+
+
+/* ===== FINAL REQUESTED MODIFICATION PASS ===== */
+/* 01 — discovery quotation: lock the quote to the physical screen center. */
+#discover .center{width:100%;max-width:none!important;}
+#discover .discover-quote{
+  width:min(900px,88vw)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  text-align:center!important;
+  align-self:center!important;
+  left:auto!important;
+  right:auto!important;
+}
+
+/* 02/13 — all rope-based cards use one straight horizontal rope. */
+.memory-rope{transform:none!important;}
+.memory-rope-card .memory-pin{
+  top:-10px!important;
+  width:9px!important;
+  height:16px!important;
+  border-radius:4px 4px 3px 3px!important;
+  transform:translateX(-50%) rotate(calc(var(--card-rot) * -1))!important;
+  transform-origin:50% 10px!important;
+  z-index:6!important;
+}
+.memory-rope-card .memory-pin::after{
+  left:4px!important;
+  top:6px!important;
+  width:1px!important;
+  height:11px!important;
+}
+
+/* 03 — memory controls: quote/date, then index, then Continue at the bottom. */
+#memories .memory-caption,#imagined .memory-caption{
+  bottom:132px!important;
+  text-align:center!important;
+  left:50%!important;
+  transform:translateX(-50%)!important;
+}
+#memories .memory-controls{bottom:64px!important;}
+#memories .floating-next,#imagined .floating-next{
+  left:50%!important;
+  right:auto!important;
+  bottom:12px!important;
+  transform:translateX(-50%)!important;
+}
+#privateMemories .memory-caption{
+  bottom:132px!important;
+  text-align:center!important;
+  pointer-events:none!important;
+}
+#privateMemories .memory-controls{
+  bottom:62px!important;
+}
+#privateMemories .floating-next{
+  left:50%!important;
+  right:auto!important;
+  bottom:12px!important;
+  transform:translateX(-50%)!important;
+}
+#memories .floating-next:hover,#imagined .floating-next:hover{transform:translateX(-50%) translateY(-2px)!important}
+
+/* 04 — Video 4 rails: retain the existing manual drag feature, but hang every
+   Polaroid from the same straight rope with a smaller clip. */
+.polaroid-window::before{
+  content:'';
+  position:absolute;
+  left:-3%;right:-3%;top:40px;height:2px;
+  background:linear-gradient(90deg,transparent 0%,rgba(240,228,214,.62) 7%,rgba(240,228,214,.78) 50%,rgba(240,228,214,.62) 93%,transparent 100%);
+  box-shadow:0 0 10px rgba(255,245,230,.08);
+  z-index:1;
+  pointer-events:none;
+}
+.polaroid-track{position:relative;z-index:2!important;}
+.moving-polaroid{position:relative!important;}
+.polaroid-pin{
+  position:absolute;left:50%;top:-9px;
+  width:9px;height:16px;
+  transform:translateX(-50%);
+  border-radius:4px 4px 3px 3px;
+  background:linear-gradient(90deg,#b98d58,#efd3a5,#9a7042);
+  box-shadow:0 2px 5px rgba(0,0,0,.35);
+  z-index:6;
+}
+.polaroid-pin::after{
+  content:'';position:absolute;left:4px;top:6px;width:1px;height:10px;
+  background:rgba(90,60,35,.55);
+}
+
+/* 05 — avatar motion: both placeholders travel from the outer edges inward. */
+#family .author{transition:2.2s cubic-bezier(.2,.8,.2,1);}
+#family .author-h{left:0!important;transform:translateX(0);}
+#family .author-p{right:0!important;transform:translateX(0);}
+#family .authors.active .author-h{left:50%!important;transform:translateX(-100%);}
+#family .authors.active .author-p{right:50%!important;transform:translateX(0);}
+#family .authors.hug .author span{transform:scale(1.05) rotate(-2deg)}
+
+/* 06 — imagined-memory caption: remove the repeated classification line; the
+   fixed top-left section marker already identifies the scene as imagined. */
+#imagined .memory-caption span:empty{display:none!important;}
+
+/* 07 — the letter remains hidden inside the sealed envelope until the flap is
+   opened; the paper rises from inside and is then presented as a designed sheet. */
+#message .envelope{overflow:visible;}
+#message .envelope-paper{
+  z-index:3!important;
+  background:
+    radial-gradient(circle at 12% 14%,rgba(171,115,78,.10) 0 2px,transparent 3px),
+    radial-gradient(circle at 88% 82%,rgba(171,115,78,.08) 0 2px,transparent 3px),
+    linear-gradient(90deg,rgba(112,82,58,.06),transparent 14%,transparent 86%,rgba(112,82,58,.05)),
+    repeating-linear-gradient(to bottom,rgba(102,91,78,.10) 0,rgba(102,91,78,.10) 1px,transparent 1px,transparent 28px),
+    #f5ead8!important;
+  border:1px solid rgba(117,86,59,.22)!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.24),inset 0 0 0 1px rgba(255,255,255,.24)!important;
+}
+#message .envelope-paper::before,
+#message .envelope-paper::after{
+  content:'';position:absolute;pointer-events:none;
+  width:34px;height:34px;border-color:rgba(130,93,61,.24);
+}
+#message .envelope-paper::before{left:10px;top:10px;border-left:1px solid;border-top:1px solid;}
+#message .envelope-paper::after{right:10px;bottom:10px;border-right:1px solid;border-bottom:1px solid;}
+#message .sealed-letter:not(.opening):not(.opened) .envelope-paper{transform:translate(-50%,105px) scale(.96)!important;opacity:0!important;visibility:hidden;}
+#message .sealed-letter.opening .envelope-paper{transform:translate(-50%,48px) scale(.72)!important;opacity:1!important;visibility:visible;z-index:3!important;}
+#message .sealed-letter.opened .envelope-paper{transform:translate(-50%,-118px) scale(1)!important;opacity:1!important;visibility:visible;z-index:8!important;}
+#message .sealed-letter.opened .envelope-front{opacity:1!important;transition:none!important;z-index:4!important;}
+#message .sealed-letter.opened .envelope-flap{z-index:6!important;}
+#message .envelope-paper-inner{position:relative;z-index:1;}
+
+/* 08 — promises are a genuinely separate interface. */
+#promises .center{justify-content:center;padding-bottom:88px;}
+#promises .promises-host{width:min(820px,92vw);margin:18px auto 0;}
+#promises .promises-wrap{width:100%;}
+#promises .promise-grid{width:100%;}
+#promises #promisesNext{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);}
+#promises #promisesNext:hover{transform:translateX(-50%) translateY(-2px);}
+
+/* 09 — public yearly idea sits after the final birthday wish and immediately
+   before the countdown, outside the private-room branch. */
+#yearIntro .center{justify-content:center;}
+#yearIntroNext{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);}
+#yearIntroNext:hover{transform:translateX(-50%) translateY(-2px);}
+
+@media(max-width:850px){
+  #memories .memory-caption,#imagined .memory-caption{bottom:126px!important;}
+  #memories .memory-controls{bottom:60px!important;}
+  #memories .floating-next,#imagined .floating-next{bottom:10px!important;}
+  #promises .promise-grid{gap:8px;}
+}
+
+/* Keep every Video 4 clip visually vertical while the Polaroid itself tilts. */
+.moving-polaroid{--card-rot:-2deg;transform:rotate(var(--card-rot))!important;}
+.moving-polaroid:nth-child(3n){--card-rot:3deg;transform:rotate(var(--card-rot))!important;}
+.moving-polaroid:nth-child(4n){--card-rot:-5deg;transform:rotate(var(--card-rot))!important;}
+.polaroid-pin{transform:translateX(-50%) rotate(calc(var(--card-rot) * -1))!important;transform-origin:50% 8px;}
+
+/* =========================================================
+   FINAL LOCKED CORRECTION PASS — ONLY USER-REQUESTED CHANGES
+   ========================================================= */
+
+/* Global background: retain the tiny white stars and restore subtle red hearts
+   and small rose-flower accents across every interface. */
+#stars .bg-heart,#stars .bg-rose{
+  position:absolute;display:block;pointer-events:none;z-index:1;
+  font-family:Georgia,serif;font-size:var(--s);line-height:1;
+  color:#a51f45;opacity:var(--o);
+  filter:drop-shadow(0 0 5px rgba(181,31,72,.32));
+  animation:bgFloat var(--t) ease-in-out var(--d) infinite alternate;
+}
+#stars .bg-rose{color:#9f3150;font-family:Georgia,serif}
+@keyframes bgFloat{to{transform:translate3d(0,-9px,0) scale(1.06);opacity:calc(var(--o) + .10)}}
+
+/* Discovery quotation: the quotation itself is centered to the physical
+   viewport, independent of the surrounding star-hunt content. */
+#discover .discover-quote{
+  position:absolute!important;
+  left:50%!important;top:50%!important;
+  width:min(900px,88vw)!important;
+  margin:0!important;
+  transform:translate(-50%,-50%)!important;
+  text-align:center!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+}
+
+/* Every rope Polaroid: the rope is visible, perfectly horizontal, and the
+   smaller clip sits across it while the card hangs below. */
+.memory-rope{z-index:4!important;top:47px!important;transform:none!important}
+.memory-rope-track{z-index:2!important}
+.memory-rope-card .memory-pin{z-index:7!important;top:-10px!important}
+/* Video-4 rails (private memories + featured memories) use the same physical
+   hanging construction and the same straight rope. */
+.polaroid-window::before{top:30px!important;z-index:4!important}
+.polaroid-track{z-index:2!important}
+.polaroid-pin{z-index:7!important;top:-3px!important}
+
+/* Main memory layout: caption -> index -> Continue, with no collision. */
+#memories .memory-caption{bottom:132px!important}
+#memories .memory-controls{bottom:62px!important}
+#memories .floating-next{bottom:12px!important}
+#imagined .memory-caption{bottom:124px!important}
+#imagined .floating-next{bottom:12px!important}
+
+/* Letter: the envelope is a closed pocket at the bottom and the paper only
+   becomes visible through the opened top flap. Once fully opened, the whole
+   designed letter is presented. */
+#message .envelope-front{z-index:6!important}
+#message .envelope-flap{z-index:7!important}
+#message .envelope-paper{z-index:5!important;clip-path:none!important}
+#message .sealed-letter:not(.opening):not(.opened) .envelope-paper{
+  transform:translate(-50%,118px) scale(.96)!important;opacity:0!important;visibility:hidden!important;z-index:5!important;
+}
+#message .sealed-letter.opening .envelope-paper{
+  transform:translate(-50%,-18px) scale(.72)!important;
+  opacity:1!important;visibility:visible!important;z-index:5!important;
+}
+#message .sealed-letter.opening .envelope-front{z-index:6!important}
+#message .sealed-letter.opening .envelope-flap{z-index:7!important}
+#message .sealed-letter.opened .envelope-paper{
+  transform:translate(-50%,-118px) scale(1)!important;
+  opacity:1!important;visibility:visible!important;z-index:8!important;
+}
+#message .sealed-letter.opened .envelope-front{z-index:4!important;opacity:1!important}
+#message .sealed-letter.opened .envelope-flap{z-index:6!important}
+
+/* Family choice: use the empty lower area for the two choices. After a choice,
+   those exact buttons disappear and the two avatars occupy that same band. */
+#family .family-wrap{
+  width:min(1220px,96vw)!important;height:94dvh!important;min-height:0!important;
+  padding:14px 0 92px!important;justify-content:flex-start!important;
+}
+#family .family-photo{
+  width:min(1180px,94vw)!important;
+  height:min(61dvh,620px)!important;
+  margin:10px auto 0!important;
+  flex:0 0 auto!important;
+}
+#family .choice-row{
+  position:absolute!important;left:50%!important;bottom:30px!important;
+  transform:translateX(-50%)!important;margin:0!important;z-index:8!important;
+}
+#family .authors{
+  position:absolute!important;left:50%!important;bottom:20px!important;
+  transform:translateX(-50%)!important;width:min(600px,88vw)!important;height:66px!important;
+  margin:0!important;z-index:9!important;overflow:visible!important;
+}
+#family .author{top:0!important;transition:transform 2.2s cubic-bezier(.2,.8,.2,1)!important}
+#family .author-h{left:0!important;right:auto!important;transform:translateX(0)!important}
+#family .author-p{right:0!important;left:auto!important;transform:translateX(0)!important}
+#family .authors.active .author-h{left:0!important;transform:translateX(calc(50% - 60px))!important}
+#family .authors.active .author-p{right:0!important;transform:translateX(calc(-50% + 60px))!important}
+#family .authors.hug .author span{transform:scale(1.05) rotate(-2deg)!important}
+
+/* Full-screen final-wish celebration burst: fireworks + hearts, triggered only
+   when the final birthday wish appears. */
+.final-burst{position:fixed;inset:0;z-index:40;pointer-events:none;overflow:hidden;opacity:0}
+.final-burst.active{opacity:1}
+.final-burst .burst-piece{position:absolute;display:block;width:var(--size);height:var(--size);border-radius:45%;opacity:0;box-shadow:0 0 12px currentColor;animation:finalPiece var(--dur) cubic-bezier(.16,.75,.2,1) var(--delay) both}
+.final-burst .burst-piece.heart{background:#ed4b7a;color:#ed4b7a;border-radius:50% 50% 45% 45%;transform:rotate(45deg)}
+.final-burst .burst-piece.rose{background:#b92d57;color:#b92d57;border-radius:50%}
+.final-burst .burst-piece.gold{background:#e7c46b;color:#e7c46b;border-radius:2px}
+.final-burst .burst-piece.white{background:#f7eef0;color:#f7eef0;border-radius:50%}
+@keyframes finalPiece{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.12) rotate(0)}
+  10%{opacity:.95}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.72) rotate(var(--rot))}
+}
+.final-burst .burst-firework{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--fcolor);box-shadow:0 0 14px 3px var(--fcolor);opacity:0;animation:fireworkPop 2.4s cubic-bezier(.2,.8,.2,1) var(--fdelay) both}
+.final-burst .burst-firework::before,.final-burst .burst-firework::after{content:'';position:absolute;inset:0;border-radius:50%;box-shadow:
+  0 calc(var(--fd) * -1) 0 0 var(--fcolor),
+  calc(var(--fd) * .707) calc(var(--fd) * -.707) 0 0 var(--fcolor),
+  var(--fd) 0 0 0 var(--fcolor),
+  calc(var(--fd) * .707) calc(var(--fd) * .707) 0 0 var(--fcolor),
+  0 var(--fd) 0 0 var(--fcolor),
+  calc(var(--fd) * -.707) calc(var(--fd) * .707) 0 0 var(--fcolor),
+  calc(var(--fd) * -1) 0 0 var(--fcolor),
+  calc(var(--fd) * -.707) calc(var(--fd) * -.707) 0 0 var(--fcolor);
+  transform:scale(.1);opacity:0;animation:fireworkRays 1.9s ease-out var(--fdelay) both}
+@keyframes fireworkPop{0%{opacity:0;transform:scale(.1)}12%{opacity:1}65%{opacity:.75}100%{opacity:0;transform:scale(1.1)}}
+@keyframes fireworkRays{0%{transform:scale(.08);opacity:0}16%{opacity:1}100%{transform:scale(1);opacity:0}}
+
+@media(max-width:850px){
+  #family .family-photo{height:min(57dvh,520px)!important}
+  #family .authors{width:min(520px,88vw)!important}
+  #family .authors.active .author-h{transform:translateX(calc(50% - 50px))!important}
+  #family .authors.active .author-p{transform:translateX(calc(-50% + 50px))!important}
+}
+@media(max-width:700px){
+  #discover .discover-quote{width:90vw!important;font-size:29px!important}
+  #family .family-photo{height:min(51dvh,430px)!important}
+  #family .choice-row{bottom:24px!important}
+  #family .authors{bottom:18px!important;height:62px!important}
+  #family .authors.active .author-h{transform:translateX(calc(50% - 44px))!important}
+  #family .authors.active .author-p{transform:translateX(calc(-50% + 44px))!important}
+}
+/* Keep the final celebration behind the birthday text, but above the star field. */
+.final-burst{z-index:1!important;}
+
+
+/* =========================================================
+   FINAL MICRO-CORRECTION PASS — USER MARKUPS ONLY
+   These rules intentionally override only the requested defects.
+   ========================================================= */
+
+/* A. Hanging Polaroids: rope must be visible above the card; the small clip
+   sits on the rope and remains attached to its card while dragging. */
+.memory-rope{z-index:4!important;}
+.memory-rope-track{z-index:2!important;}
+.memory-rope-card{z-index:2!important;}
+.memory-rope-card .memory-pin{z-index:7!important;top:-11px!important;}
+
+/* The Video-4 Polaroid rail uses the same physical hanging construction. */
+.polaroid-track{position:relative!important;z-index:2!important;}
+.moving-polaroid{position:relative!important;z-index:2!important;}
+.polaroid-window::before{z-index:4!important;}
+.polaroid-pin{z-index:7!important;top:-7px!important;}
+
+/* B. Main letter: while the flap is opening, the sheet stays behind the
+   envelope pocket/front. It can only emerge upward through the top opening;
+   nothing can protrude through the bottom or side edges. */
+#message .envelope{overflow:hidden!important;}
+#message .envelope-paper{z-index:3!important;}
+#message .envelope-front{z-index:6!important;}
+#message .envelope-flap{z-index:7!important;}
+#message .sealed-letter:not(.opening):not(.opened) .envelope-paper{
+  transform:translate(-50%,118px) scale(.96)!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  z-index:3!important;
+}
+#message .sealed-letter.opening .envelope-paper{
+  transform:translate(-50%,32px) scale(.76)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  z-index:3!important;
+}
+#message .sealed-letter.opening .envelope-front{z-index:6!important;}
+#message .sealed-letter.opening .envelope-flap{z-index:7!important;}
+#message .sealed-letter.opened .envelope-paper{
+  transform:translate(-50%,-118px) scale(1)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  z-index:8!important;
+}
+#message .sealed-letter.opened .envelope-front{z-index:4!important;}
+#message .sealed-letter.opened .envelope-flap{z-index:6!important;}
+
+/* C. Family choice: maximize the image vertically. The two choices live in
+   the lower band; once a choice is made, that same band becomes the avatar
+   stage, so the image/buttons/avatars never waste the lower screen. */
+#family .family-wrap{
+  width:min(1220px,96vw)!important;
+  height:94dvh!important;
+  min-height:0!important;
+  padding:10px 0 92px!important;
+  justify-content:flex-start!important;
+}
+#family .family-photo{
+  width:min(1180px,94vw)!important;
+  height:min(68dvh,660px)!important;
+  margin:4px auto 0!important;
+  flex:0 0 auto!important;
+}
+#family .choice-row{
+  position:absolute!important;
+  left:50%!important;
+  bottom:22px!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+  z-index:8!important;
+}
+#family .authors{
+  position:absolute!important;
+  left:50%!important;
+  bottom:14px!important;
+  transform:translateX(-50%)!important;
+  width:min(600px,88vw)!important;
+  height:66px!important;
+  margin:0!important;
+  z-index:9!important;
+  overflow:visible!important;
+}
+#family .author{top:0!important;}
+#family .author-h{left:0!important;right:auto!important;transform:translateX(0)!important;}
+#family .author-p{right:0!important;left:auto!important;transform:translateX(0)!important;}
+#family .authors.active .author-h{left:0!important;transform:translateX(calc(50% - 60px))!important;}
+#family .authors.active .author-p{right:0!important;transform:translateX(calc(-50% + 60px))!important;}
+#family .authors.hug .author span{transform:scale(1.05) rotate(-2deg)!important;}
+
+/* D. The final-wish burst is deliberately behind the text but above the
+   cinematic star field, and is visible only when Final Birthday Wish enters. */
+#finalWish{position:relative;isolation:isolate;}
+#finalWish .center{position:relative;z-index:3;}
+.final-burst{z-index:1!important;}
+
+/* Narrow landscape: preserve the same hierarchy without clipping the image. */
+@media(max-width:850px){
+  #family .family-photo{height:min(64dvh,520px)!important;}
+  #family .choice-row{bottom:18px!important;}
+  #family .authors{bottom:10px!important;width:min(520px,88vw)!important;height:62px!important;}
+  #family .authors.active .author-h{transform:translateX(calc(50% - 50px))!important;}
+  #family .authors.active .author-p{transform:translateX(calc(-50% + 50px))!important;}
+}
+@media(max-width:700px){
+  #family .family-photo{height:min(57dvh,430px)!important;}
+  #family .choice-row{bottom:14px!important;}
+  #family .authors{bottom:7px!important;height:58px!important;}
+  #family .authors.active .author-h{transform:translateX(calc(50% - 44px))!important;}
+  #family .authors.active .author-p{transform:translateX(calc(-50% + 44px))!important;}
+}
+
+/* FINAL MICRO-FIX: keep the main letter centered while preserving the physical
+   envelope opening hierarchy. */
+#message .envelope-paper{
+  left:50%!important;
+  right:auto!important;
+  width:86%!important;
+  max-width:none!important;
+}
+#message .sealed-letter.opening .envelope-paper{
+  clip-path:inset(0 0 12% 0 round 4px)!important;
+}
+#message .sealed-letter.opened .envelope-paper{
+  clip-path:none!important;
+}
+
+/* The branch-B envelope uses the same physical opening rule. */
+.choice-envelope{overflow:visible!important;}
+.choice-envelope-paper{z-index:3!important;}
+.choice-envelope-front{z-index:6!important;}
+.choice-envelope-flap{z-index:7!important;}
+.choice-envelope.open .choice-envelope-paper{
+  z-index:8!important;
+  clip-path:none!important;
+}
+.choice-envelope.opening .choice-envelope-paper{
+  z-index:3!important;
+  clip-path:inset(0 0 14% 0 round 3px)!important;
+}
+
+/* FINAL MICRO-FIX: the family avatars enter from the actual left/right edges
+   of the screen and meet in the same lower band used by the choices. */
+#family .authors{width:100vw!important;max-width:none!important;}
+#family .authors .author-h{left:0!important;right:auto!important;transform:translateX(0)!important;}
+#family .authors .author-p{right:0!important;left:auto!important;transform:translateX(0)!important;}
+#family .authors.active .author-h{left:0!important;transform:translateX(calc(50vw - 100%))!important;}
+#family .authors.active .author-p{right:0!important;transform:translateX(-50vw)!important;}
+
+/* Rope position is computed from the actual clip for the Video-4 rails. */
+.polaroid-window::before{top:var(--rope-y,40px)!important;}
+
+/* =========================================================
+   MICRO INSPECTION LOCK — REQUESTED MARKUPS ONLY
+   Shared physical hanging system: rope -> clip -> Polaroid.
+   The rope travels with the same track as the cards, so the relationship
+   cannot break while swiping/dragging.
+   ========================================================= */
+
+/* REAL / IMAGINED MEMORY RAILS */
+.memory-rope{display:none!important;}
+.memory-rope-track{
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  height:100%!important;
+  padding-top:58px!important;
+  align-items:flex-start!important;
+  z-index:auto!important;
+  isolation:isolate;
+}
+.memory-rope-track::before{
+  content:"";
+  position:absolute;
+  left:-8vw;
+  right:-8vw;
+  top:47px;
+  height:2px;
+  background:linear-gradient(90deg,transparent 0%,rgba(240,228,214,.62) 7%,rgba(240,228,214,.78) 50%,rgba(240,228,214,.62) 93%,transparent 100%);
+  box-shadow:0 0 10px rgba(255,245,230,.08);
+  z-index:4;
+  pointer-events:none;
+}
+.memory-rope-card{
+  z-index:2!important;
+  --pin-top:-11px;
+}
+.memory-rope-card:nth-child(2n){--pin-top:-17px;}
+.memory-rope-card:nth-child(3n){--pin-top:-13px;}
+.memory-rope-card .memory-pin{
+  top:var(--pin-top)!important;
+  z-index:7!important;
+}
+
+/* PRIVATE / FEATURED VIDEO-4 RAILS */
+.polaroid-window::before{display:none!important;}
+.polaroid-track{
+  position:relative!important;
+  align-items:flex-start!important;
+  padding-top:58px!important;
+  z-index:auto!important;
+  isolation:isolate;
+}
+.polaroid-track::before{
+  content:"";
+  position:absolute;
+  left:-8vw;
+  right:-8vw;
+  top:47px;
+  height:2px;
+  background:linear-gradient(90deg,transparent 0%,rgba(240,228,214,.62) 7%,rgba(240,228,214,.78) 50%,rgba(240,228,214,.62) 93%,transparent 100%);
+  box-shadow:0 0 10px rgba(255,245,230,.08);
+  z-index:4;
+  pointer-events:none;
+}
+.moving-polaroid{
+  position:relative!important;
+  z-index:2!important;
+}
+.moving-polaroid .polaroid-pin{
+  top:-7px!important;
+  z-index:7!important;
+}
+
+/* DISCOVERY QUOTATION — physical viewport center, not content-box center. */
+#discover .discover-quote{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%)!important;
+  width:min(900px,88vw)!important;
+  margin:0!important;
+  text-align:center!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+/* MEMORY CONTROLS — caption, index, then Continue with a dedicated lower band. */
+#memories .memory-caption{
+  bottom:132px!important;
+  text-align:center!important;
+}
+#memories .memory-controls{
+  bottom:62px!important;
+}
+#memories .floating-next{
+  left:50%!important;
+  right:auto!important;
+  bottom:12px!important;
+  transform:translateX(-50%)!important;
+}
+#imagined .memory-caption{
+  bottom:124px!important;
+  text-align:center!important;
+}
+#imagined .floating-next{
+  left:50%!important;
+  right:auto!important;
+  bottom:12px!important;
+  transform:translateX(-50%)!important;
+}
+
+/* LETTER — closed envelope is a pocket. During opening the paper is clipped
+   by the envelope; only the upper portion can emerge. */
+#message .envelope{
+  overflow:hidden!important;
+}
+#message .envelope-paper{
+  left:50%!important;
+  right:auto!important;
+  width:86%!important;
+  z-index:3!important;
+}
+#message .envelope-front{z-index:6!important;}
+#message .envelope-flap{z-index:7!important;}
+#message .sealed-letter:not(.opening):not(.opened) .envelope-paper{
+  transform:translate(-50%,118px) scale(.96)!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  z-index:3!important;
+}
+#message .sealed-letter.opening .envelope-paper{
+  transform:translate(-50%,34px) scale(.76)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  z-index:3!important;
+}
+#message .sealed-letter.opening .envelope-front{z-index:6!important;}
+#message .sealed-letter.opening .envelope-flap{z-index:7!important;}
+#message .sealed-letter.opened .envelope-paper{
+  transform:translate(-50%,-118px) scale(1)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  z-index:8!important;
+}
+#message .sealed-letter.opened .envelope-front{z-index:4!important;}
+#message .sealed-letter.opened .envelope-flap{z-index:6!important;}
+
+/* FAMILY CHOICE — maximize the photograph; choices occupy the lower band;
+   after selection that same band becomes the avatar stage. */
+#family .family-wrap{
+  width:min(1220px,96vw)!important;
+  height:94dvh!important;
+  min-height:0!important;
+  padding:10px 0 92px!important;
+  justify-content:flex-start!important;
+}
+#family .family-photo{
+  width:min(1180px,94vw)!important;
+  height:min(68dvh,660px)!important;
+  margin:4px auto 0!important;
+  flex:0 0 auto!important;
+}
+#family .choice-row{
+  position:absolute!important;
+  left:50%!important;
+  bottom:22px!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+  z-index:8!important;
+}
+#family .authors{
+  position:absolute!important;
+  left:50%!important;
+  bottom:14px!important;
+  transform:translateX(-50%)!important;
+  width:100vw!important;
+  max-width:none!important;
+  height:66px!important;
+  margin:0!important;
+  z-index:9!important;
+  overflow:visible!important;
+}
+#family .author{
+  top:0!important;
+  transition:transform 2.2s cubic-bezier(.2,.8,.2,1)!important;
+}
+#family .author-h{
+  left:0!important;
+  right:auto!important;
+  transform:translateX(0)!important;
+}
+#family .author-p{
+  right:0!important;
+  left:auto!important;
+  transform:translateX(0)!important;
+}
+#family .authors.active .author-h{
+  left:0!important;
+  transform:translateX(calc(50vw - 100%))!important;
+}
+#family .authors.active .author-p{
+  right:0!important;
+  transform:translateX(-50vw)!important;
+}
+#family .authors.hug .author span{
+  transform:scale(1.05) rotate(-2deg)!important;
+}
+
+/* FINAL BIRTHDAY WISH — the burst occurs only as this scene enters and stays
+   behind the birthday message. */
+#finalWish{position:relative!important;isolation:isolate!important;}
+#finalWish .center{position:relative!important;z-index:3!important;}
+#finalBurst{z-index:1!important;}
+
+/* Preserve the global cinematic star / heart / rose field. */
+#stars .bg-heart,#stars .bg-rose{z-index:1;}
+
+@media(max-width:850px){
+  #family .family-photo{height:min(64dvh,520px)!important;}
+  #family .authors{height:62px!important;}
+  #family .authors.active .author-h{transform:translateX(calc(50vw - 100%))!important;}
+  #family .authors.active .author-p{transform:translateX(-50vw)!important;}
+}
+@media(max-width:700px){
+  #family .family-photo{height:min(57dvh,430px)!important;}
+  #family .choice-row{bottom:14px!important;}
+  #family .authors{bottom:7px!important;height:58px!important;}
+}
+
+/* Micro geometry correction: every hanging card rotates around its hanging
+   point. This keeps every clip on one straight horizontal rope while the
+   Polaroid can still retain its slight natural tilt. */
+.memory-rope-card,
+.moving-polaroid{
+  transform-origin:50% 0!important;
+}
+.memory-rope-card:nth-child(2n){transform:rotate(2.5deg)!important;}
+.memory-rope-card:nth-child(3n){transform:rotate(-4deg)!important;}
+.moving-polaroid{transform:rotate(-2deg)!important;}
+.moving-polaroid:nth-child(3n){transform:rotate(3deg)!important;}
+.moving-polaroid:nth-child(4n){transform:rotate(-5deg)!important;}
+.memory-rope-card .memory-pin,
+.moving-polaroid .polaroid-pin{
+  transform:translateX(-50%)!important;
+}
+
+/* Exact rope/clip registration: the rope crosses the center of the small clip. */
+.memory-rope-track::before{top:56px!important;}
+.polaroid-track::before{top:59px!important;}
+
+/* Final clip registration for the three-card rope rails: one common pin height
+   keeps every clip centered on the same straight rope, even on tilted cards. */
+.memory-rope-card .memory-pin{top:-9.5px!important;}
+#imaginedTrack::before{top:53.5px!important;}
+
+/* Final visual corrections found during the second micro-inspection. */
+#imaginedTrack::before{top:53px!important;}
+#message .sealed-letter.opened .envelope{overflow:visible!important;}
+#family .authors.active .author-h{
+  left:calc(50% - 70px)!important;
+  right:auto!important;
+  transform:none!important;
+}
+#family .authors.active .author-p{
+  left:calc(50% + 10px)!important;
+  right:auto!important;
+  transform:none!important;
+}
+
+/* Keep the post-choice action below the reunited avatars instead of letting
+   the button overlap the avatar/name area. */
+#family .authors{bottom:54px!important;}
+#family #branchNext{
+  position:absolute!important;
+  left:50%!important;
+  bottom:6px!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+  z-index:10!important;
+}
+#family #branchNext:hover{transform:translateX(-50%) translateY(-2px)!important;}
+#message .sealed-letter.opened .envelope{overflow:visible!important;}
+@media(max-width:850px){
+  #family .authors{bottom:48px!important;}
+  #family #branchNext{bottom:4px!important;}
+}
+@media(max-width:700px){
+  #family .authors{bottom:44px!important;}
+  #family #branchNext{bottom:2px!important;}
+}
+
+
+/* FINAL MICRO-FIX 2026-09-20 — family avatars must actually travel from the
+   left/right edges. The motion therefore animates the position property being
+   changed, not only transform. The two avatars also stay in the same lower
+   band as the choice buttons and remain separated from the action button. */
+#family .authors .author{
+  transition:left 2.2s cubic-bezier(.2,.8,.2,1)!important;
+}
+#family .authors .author-h{
+  left:0!important;right:auto!important;transform:none!important;
+}
+#family .authors .author-p{
+  left:calc(100% - 70px)!important;right:auto!important;transform:none!important;
+}
+#family .authors.active .author-h{
+  left:calc(50% - 70px)!important;right:auto!important;transform:none!important;
+}
+#family .authors.active .author-p{
+  left:calc(50% + 10px)!important;right:auto!important;transform:none!important;
+}
+#family .authors{bottom:74px!important;}
+#family #branchNext{bottom:4px!important;}
+
+/* ===== MASTER REQUIREMENT PASS — deterministic interaction + safe responsive layout ===== */
+#stars,.bg-heart,.bg-rose{pointer-events:none!important}
+#discover .star-hunt{height:clamp(220px,38dvh,360px);min-height:220px;position:relative;isolation:isolate}
+#discover .hunt-star{z-index:10!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent}
+#discover .hunt-star.found{filter:drop-shadow(0 0 16px rgba(255,255,255,.55))}
+#discover .hunt-count{margin-top:6px}
+#smile .fun-grid{margin-bottom:8px}
+#smile .interaction-label{min-height:20px}
+#smile .ghost-next{margin-top:10px!important}
+#imagined .memory-caption span{display:block;margin-top:4px}
+#videos .video-carousel{touch-action:pan-y;overscroll-behavior:contain}
+#videos .video-carousel video{touch-action:auto}
+#story .story-track{animation:none!important}
+#story .story-card{flex-basis:250px;width:250px}
+#promises .promise-card{touch-action:manipulation}
+#promises .ghost-next.hidden{display:none!important}
+#family .choice-row.hidden{display:none!important}
+#family #branchNext{pointer-events:auto}
+#yearIntro h2 span{color:var(--gold)}
+@media(max-width:900px){
+  #discover .star-hunt{height:clamp(220px,42dvh,320px)}
+  #story .story-card{flex-basis:220px;width:220px}
+}
+@media(max-width:700px){
+  #discover .star-hunt{height:240px;min-height:240px}
+  #discover .hunt-star{width:60px;height:60px;font-size:23px}
+  #story .story-card{flex-basis:190px;width:190px}
+  #videos .video-carousel{touch-action:pan-y}
+}
+
+
+/* =========================================================
+   APPROVED INTERFACE CORRECTIONS — CHANGE ONLY REQUESTED ITEMS
+   ========================================================= */
+
+/* 01 — Moon: the pre-action instruction disappears with the moon. */
+#arrival .touchMoonLabel{}
+#arrival .post-moon-hidden{opacity:0!important;visibility:hidden!important;pointer-events:none!important;transition:opacity .55s ease,visibility .55s ease!important;}
+#arrival .arrival-center.revealed{justify-content:center!important;}
+#arrival .arrival-center.revealed .arrival-date{margin-top:0!important;}
+
+/* 02 — Cake: HER BIRTHDAY was intentionally removed from the markup. */
+
+/* 03 — Live age: remove only the large outer timer block and keep the age +
+   live counters together as one centered content group. */
+#lifeClock .center{justify-content:center!important;}
+#lifeClock .age-panel{background:transparent!important;border:0!important;border-radius:0!important;padding:0!important;box-shadow:none!important;width:auto!important;margin-top:18px!important;}
+#lifeClock .age-panel > div{background:transparent!important;}
+#lifeClock .ageReveal{}
+
+/* 04 — Stars: keep stars where they are; move only the completed quote and
+   final action into the lower action band. */
+#discover .center{padding-bottom:0!important;}
+#discover .discover-quote{position:absolute!important;left:50%!important;bottom:92px!important;transform:translateX(-50%)!important;width:min(900px,88vw)!important;margin:0!important;padding:0 20px!important;}
+#discover .discover-quote + .ghost-next{position:absolute!important;left:50%!important;right:auto!important;bottom:24px!important;transform:translateX(-50%)!important;margin:0!important;}
+#discover .discover-quote + .ghost-next:hover{transform:translateX(-50%) translateY(-2px)!important;}
+
+/* 05 — Hanging memory cards: give every pin a visible clearance above the
+   card/rope relationship. One shared rule covers every rope-card rail. */
+.memory-rope-card .memory-pin{top:-24px!important;width:12px!important;height:28px!important;border-radius:5px 5px 3px 3px!important;}
+.memory-rope-card .memory-pin::after{left:5px!important;top:8px!important;width:2px!important;height:20px!important;}
+.polaroid-pin{top:-24px!important;width:12px!important;height:28px!important;border-radius:5px 5px 3px 3px!important;}
+.polaroid-pin::after{left:5px!important;top:8px!important;width:2px!important;height:20px!important;}
+
+/* 06 — Private room: the explanatory date sentence was removed. */
+
+/* 07 — Main letter: keep the action at the bottom and enrich only the paper
+   presentation, without changing the written content. */
+#message .center{justify-content:center!important;}
+#message .tap-hint{margin-top:0!important;}
+#message .center > .ghost-next{position:absolute!important;left:50%!important;bottom:8px!important;transform:translateX(-50%)!important;margin:0!important;}
+#message .center > .ghost-next:hover{transform:translateX(-50%) translateY(-2px)!important;}
+#message .envelope-paper,
+#family .choice-envelope-paper{
+  background:
+    radial-gradient(circle at 10% 12%,rgba(180,135,82,.18) 0 2px,transparent 3px),
+    radial-gradient(circle at 90% 88%,rgba(180,135,82,.18) 0 2px,transparent 3px),
+    repeating-linear-gradient(to bottom,rgba(102,91,78,.10) 0,rgba(102,91,78,.10) 1px,transparent 1px,transparent 28px),
+    #f4eee5!important;
+  border:1px solid rgba(126,100,74,.22)!important;
+  box-shadow:0 10px 24px rgba(0,0,0,.24),inset 0 0 0 1px rgba(255,255,255,.42)!important;
+}
+#message .envelope-paper::before,
+#message .envelope-paper::after,
+#family .choice-envelope-paper::before,
+#family .choice-envelope-paper::after{
+  content:'✿';position:absolute;color:rgba(132,91,58,.34);font-family:'Cormorant Garamond',serif;font-size:22px;line-height:1;pointer-events:none;
+}
+#message .envelope-paper::before,#family .choice-envelope-paper::before{left:10px;top:8px;}
+#message .envelope-paper::after,#family .choice-envelope-paper::after{right:10px;bottom:8px;transform:rotate(180deg);}
+#message .envelope-paper{position:absolute!important;}
+
+/* 08 — Own Path letter: center the opened letter and remove the envelope
+   surfaces once the paper has fully emerged. */
+#family .branch-message{position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:min(760px,92vw)!important;min-height:0!important;margin:0!important;z-index:20!important;}
+#family .choice-letter-wrap{width:100%!important;min-height:0!important;height:320px!important;padding:0!important;justify-content:center!important;align-items:center!important;}
+#family .choice-envelope{width:min(560px,86vw)!important;height:280px!important;}
+#family .choice-envelope.open .choice-envelope-paper{left:50%!important;right:auto!important;top:50%!important;bottom:auto!important;width:min(520px,82vw)!important;height:240px!important;transform:translate(-50%,-50%) scale(1.02)!important;z-index:12!important;}
+#family .choice-envelope.open .choice-envelope-front,
+#family .choice-envelope.open .choice-envelope-flap{opacity:0!important;pointer-events:none!important;transition:opacity .45s ease!important;}
+#family .choice-letter-hint{display:none!important;}
+#family #branchNext{position:absolute!important;left:50%!important;right:auto!important;bottom:18px!important;transform:translateX(-50%)!important;margin:0!important;z-index:25!important;}
+#family #branchNext:hover{transform:translateX(-50%) translateY(-2px)!important;}
+
+/* 09/12 — main content centered; action remains bottom-center. */
+#finalWish .center,#yearIntro .center{justify-content:center!important;}
+#finalWish #finalNext{position:absolute!important;left:50%!important;bottom:10px!important;transform:translateX(-50%)!important;margin:0!important;}
+#finalWish #finalNext:hover{transform:translateX(-50%) translateY(-2px)!important;}
+#yearIntro #yearIntroNext{position:absolute!important;left:50%!important;bottom:10px!important;transform:translateX(-50%)!important;margin:0!important;}
+#yearIntro #yearIntroNext:hover{transform:translateX(-50%) translateY(-2px)!important;}
+
+/* 10 — Family choice: replace the old flat letter placeholders with simple
+   dimensional animated character forms. Their labels and motion remain intact. */
+#family .author{width:78px!important;top:4px!important;}
+#family .author small{margin-top:2px!important;}
+#family .avatar-3d{position:relative!important;width:58px!important;height:68px!important;display:block!important;border-radius:50% 50% 26% 26%!important;background:linear-gradient(145deg,#f0e4d8 0%,#c8b8aa 46%,#6c625d 100%)!important;box-shadow:inset -8px -8px 14px rgba(0,0,0,.24),inset 7px 6px 10px rgba(255,255,255,.22),0 10px 22px rgba(0,0,0,.28)!important;overflow:visible!important;transform-style:preserve-3d!important;animation:avatarFloat 3.2s ease-in-out infinite!important;}
+#family .avatar-head{position:absolute!important;left:12px!important;top:7px!important;width:34px!important;height:38px!important;border-radius:48% 48% 46% 46%!important;background:linear-gradient(145deg,#f5dfcd,#b98f76)!important;box-shadow:inset -5px -5px 8px rgba(0,0,0,.16),0 1px 2px rgba(0,0,0,.2)!important;z-index:3!important;}
+#family .avatar-hair{position:absolute!important;left:10px!important;top:3px!important;width:38px!important;height:18px!important;border-radius:50% 50% 42% 42%!important;background:linear-gradient(145deg,#2c241f,#090807)!important;z-index:4!important;}
+#family .avatar-face{position:absolute!important;left:21px!important;top:23px!important;width:16px!important;height:5px!important;border-top:2px solid rgba(65,35,25,.65)!important;border-radius:50%!important;z-index:5!important;}
+#family .avatar-body{position:absolute!important;left:5px!important;bottom:-4px!important;width:48px!important;height:28px!important;border-radius:18px 18px 8px 8px!important;background:linear-gradient(145deg,#35302d,#11100f)!important;box-shadow:inset -6px -4px 10px rgba(0,0,0,.25),inset 6px 4px 8px rgba(255,255,255,.08)!important;z-index:2!important;}
+#family .avatar-potti .avatar-hair{height:22px!important;border-radius:50% 50% 44% 44%!important;background:linear-gradient(145deg,#241d19,#080706)!important;}
+#family .avatar-potti .avatar-body{background:linear-gradient(145deg,#6c5a54,#1a1514)!important;}
+@keyframes avatarFloat{50%{transform:translateY(-4px) rotateY(4deg)}}
+
+/* 11 — Final celebration belongs only to the final message after the countdown. */
+#finalWish .final-burst{display:none!important;}
+#countdownScene .end-message{position:relative;z-index:3;}
+
+/* Keep requested main-content centering on the yearly/countdown climax. */
+#countdownScene .countdown-center{justify-content:center!important;}
+
+@media(max-width:700px){
+  #discover .discover-quote{bottom:88px!important;width:92vw!important;}
+  #discover .discover-quote + .ghost-next{bottom:18px!important;}
+  #message .center > .ghost-next,#finalWish #finalNext,#yearIntro #yearIntroNext{bottom:8px!important;}
+  #family .branch-message{top:47%!important;}
+  #family .choice-envelope.open .choice-envelope-paper{width:88vw!important;height:230px!important;}
+}
+
+/* 14 — Shared bottom action position requested for Continue / Next-style controls. */
+.scene .center > .ghost-next:not(.floating-next){
+  position:absolute!important;
+  left:50%!important;
+  right:auto!important;
+  bottom:10px!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+}
+.scene .center > .ghost-next:not(.floating-next):hover{transform:translateX(-50%) translateY(-2px)!important;}
+
+/* Hanging clearance: the rope stays above the card with a deliberate visible gap. */
+.memory-rope-track{padding-top:80px!important;}
+.polaroid-track{padding-top:80px!important;}
+.memory-rope-track::before,.polaroid-track::before{top:47px!important;}
+.memory-rope-card .memory-pin{top:-24px!important;}
+.moving-polaroid .polaroid-pin{top:-24px!important;}
+
+/* =========================================================
+   2026-09-21 — EXACT REQUESTED CORRECTION PASS
+   This block intentionally overrides only the seven requested defects.
+   ========================================================= */
+
+/* 01 — Moon: after the vanish animation, remove the moon from the flex layout
+   so the remaining arrival message recenters as one complete composition. */
+.realistic-moon.moon-gone{display:none!important;}
+#arrival .arrival-center.revealed{justify-content:center!important;}
+
+/* 02 — Cinematic one-screen rule: scenes never become scroll containers.
+   Content is fitted inside the viewport instead of creating a page scrollbar. */
+html,body,#app{width:100%!important;height:100%!important;overflow:hidden!important;}
+.scene{
+  width:100%!important;
+  height:100dvh!important;
+  min-height:100dvh!important;
+  max-height:100dvh!important;
+  overflow:hidden!important;
+  overflow-y:hidden!important;
+  overflow-x:hidden!important;
+  scrollbar-width:none!important;
+  scrollbar-gutter:unset!important;
+  place-items:center!important;
+}
+.scene::-webkit-scrollbar{display:none!important;width:0!important;height:0!important;}
+.scene .center{
+  height:min(86dvh,820px)!important;
+  min-height:0!important;
+  max-height:calc(100dvh - 36px)!important;
+  flex:0 1 auto!important;
+  overflow:visible!important;
+  padding:18px 0 68px!important;
+}
+
+/* Shorter desktop/laptop viewports: reduce the large visual components before
+   they can compete with the fixed bottom action. */
+@media (min-width:701px) and (max-height:850px){
+  .scene .center{height:calc(100dvh - 30px)!important;padding:12px 0 62px!important;}
+  .scene h2{font-size:clamp(32px,5.2vw,66px)!important;}
+  .body-copy{line-height:1.5!important;}
+  #birthdayIntro .birthday-stage{height:min(35dvh,300px)!important;min-height:210px!important;}
+  #discover .star-hunt{height:min(26dvh,245px)!important;min-height:190px!important;}
+  #videos .video-carousel{height:min(47dvh,390px)!important;}
+  #message .sealed-letter{height:min(43dvh,350px)!important;min-height:250px!important;}
+  #family .family-photo{height:min(54dvh,470px)!important;}
+}
+
+/* 03 — Five-star discovery: stars occupy their own band; the completed quote
+   is in the clear band immediately below them and above the CTA. */
+#discover .center{
+  width:min(900px,94vw)!important;
+  height:min(86dvh,820px)!important;
+  min-height:0!important;
+  padding:12px 20px 64px!important;
+  justify-content:center!important;
+}
+#discover .star-hunt{
+  flex:0 0 auto!important;
+  height:clamp(180px,28dvh,270px)!important;
+  min-height:0!important;
+  margin:10px 0 2px!important;
+}
+#discover .hunt-count{flex:0 0 auto!important;margin:2px 0 0!important;font-size:10px!important;}
+#discover .discover-quote{
+  position:static!important;
+  flex:0 0 auto!important;
+  width:min(820px,92vw)!important;
+  min-height:0!important;
+  margin:10px auto 8px!important;
+  padding:0 12px!important;
+  transform:none!important;
+  display:block!important;
+  text-align:center!important;
+  font-size:clamp(20px,2.35vw,34px)!important;
+  line-height:1.08!important;
+  color:#f2e9df!important;
+}
+#discover .discover-quote + .ghost-next{
+  position:absolute!important;
+  left:50%!important;
+  bottom:10px!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+}
+#discover .discover-quote + .ghost-next:hover{transform:translateX(-50%) translateY(-2px)!important;}
+@media(max-width:900px){
+  #discover .star-hunt{height:clamp(165px,27dvh,235px)!important;}
+  #discover .discover-quote{font-size:clamp(18px,3.2vw,28px)!important;}
+}
+@media(max-width:700px){
+  #discover .center{padding-bottom:58px!important;}
+  #discover .star-hunt{height:clamp(150px,25dvh,210px)!important;}
+  #discover .hunt-star{width:52px!important;height:52px!important;font-size:21px!important;}
+  #discover .discover-quote{font-size:clamp(17px,4.2vw,24px)!important;line-height:1.06!important;margin-top:8px!important;}
+  #discover .discover-quote + .ghost-next{bottom:8px!important;}
+}
+
+/* 04 — Private room: no Hint button. The two clues selected for this page
+   load are visible immediately and remain tied to the generated key. */
+#gate .pass-row{margin:22px auto 8px!important;}
+#gate .hint{
+  display:block!important;
+  min-height:0!important;
+  width:min(620px,92vw)!important;
+  margin:0 auto 10px!important;
+  color:#aaa!important;
+  font-size:12px!important;
+  line-height:1.5!important;
+  text-align:center!important;
+}
+#gate .gate-message{min-height:22px!important;}
+
+/* 05 — Memory/Polaroid rails: preserve the complete source image. Portraits
+   share one consistent card width; landscape images receive a wider card so
+   their complete frame is visible. No card may overlap another card. */
+.memory-rope-track,
+.polaroid-track{
+  gap:24px!important;
+  align-items:flex-start!important;
+  overflow:visible!important;
+}
+.memory-rope-card,
+.moving-polaroid{
+  flex:0 0 auto!important;
+  transform-origin:50% 0!important;
+  margin:0!important;
+}
+.memory-rope-card[data-orientation="portrait"],
+.moving-polaroid[data-orientation="portrait"]{
+  width:180px!important;
+  flex-basis:180px!important;
+}
+.memory-rope-card[data-orientation="landscape"],
+.moving-polaroid[data-orientation="landscape"]{
+  width:365px!important;
+  flex-basis:365px!important;
+}
+.memory-rope-card .memory-photo,
+.polaroid-photo{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:#ddd!important;
+  overflow:hidden!important;
+}
+.memory-rope-card .memory-photo{height:260px!important;}
+.memory-rope-card .memory-photo img,
+.polaroid-photo img{
+  display:block!important;
+  width:auto!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  flex:0 0 auto!important;
+}
+.memory-rope-card[data-orientation="portrait"] .memory-photo,
+.moving-polaroid[data-orientation="portrait"] .polaroid-photo{width:162px!important;margin:0 auto!important;}
+.memory-rope-card[data-orientation="landscape"] .memory-photo,
+.moving-polaroid[data-orientation="landscape"] .polaroid-photo{width:347px!important;margin:0 auto!important;}
+.memory-rope-card>span{left:8px!important;right:8px!important;}
+.moving-polaroid figcaption{width:100%!important;min-height:34px!important;}
+
+@media(max-width:1000px){
+  .memory-rope-track,.polaroid-track{gap:20px!important;}
+  .memory-rope-card[data-orientation="portrait"],
+  .moving-polaroid[data-orientation="portrait"]{width:170px!important;flex-basis:170px!important;}
+  .memory-rope-card[data-orientation="landscape"],
+  .moving-polaroid[data-orientation="landscape"]{width:315px!important;flex-basis:315px!important;}
+  .memory-rope-card .memory-photo{height:225px!important;}
+  .memory-rope-card[data-orientation="portrait"] .memory-photo,
+  .moving-polaroid[data-orientation="portrait"] .polaroid-photo{width:140px!important;}
+  .memory-rope-card[data-orientation="landscape"] .memory-photo,
+  .moving-polaroid[data-orientation="landscape"] .polaroid-photo{width:300px!important;}
+  .polaroid-photo{height:225px!important;}
+}
+@media(max-width:700px){
+  .memory-rope-track,.polaroid-track{gap:16px!important;}
+  .memory-rope-card[data-orientation="portrait"],
+  .moving-polaroid[data-orientation="portrait"]{width:150px!important;flex-basis:150px!important;}
+  .memory-rope-card[data-orientation="landscape"],
+  .moving-polaroid[data-orientation="landscape"]{width:255px!important;flex-basis:255px!important;}
+  .memory-rope-card .memory-photo{height:190px!important;}
+  .polaroid-photo{height:190px!important;}
+  .memory-rope-card[data-orientation="portrait"] .memory-photo,
+  .moving-polaroid[data-orientation="portrait"] .polaroid-photo{width:130px!important;}
+  .memory-rope-card[data-orientation="landscape"] .memory-photo,
+  .moving-polaroid[data-orientation="landscape"] .polaroid-photo{width:253px!important;}
+  .memory-rope-card>span{font-size:13px!important;}
+  .moving-polaroid figcaption{font-size:13px!important;}
+}
+
+/* 06 — Wishes: 00 means nothing has been opened yet; JS advances it to 01
+   only after the first card is actually revealed. */
+#wishes #wishNumber{min-height:12px;}
+
+/* 07 — Own Path letter: use the same physical envelope → flap → rising paper
+   → writing sequence as the main letter, while retaining its unique content. */
+#family .branch-message{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%)!important;
+  width:min(820px,94vw)!important;
+  min-height:0!important;
+  margin:0!important;
+  z-index:20!important;
+  overflow:visible!important;
+}
+#family .choice-letter-wrap{
+  width:100%!important;
+  height:min(58dvh,500px)!important;
+  min-height:0!important;
+  padding:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+}
+#family .choice-letter-intro{
+  margin:0 0 12px!important;
+  font-size:clamp(18px,2vw,25px)!important;
+}
+#family .choice-envelope{
+  width:min(620px,90vw)!important;
+  height:230px!important;
+  position:relative!important;
+  perspective:1200px!important;
+  overflow:visible!important;
+}
+#family .choice-envelope-paper{
+  left:50%!important;
+  right:auto!important;
+  bottom:18px!important;
+  top:auto!important;
+  width:min(570px,86vw)!important;
+  height:250px!important;
+  padding:24px 30px!important;
+  font-size:12px!important;
+  line-height:1.55!important;
+  transform:translate(-50%,105px) scale(.96)!important;
+  transform-origin:center bottom!important;
+  transition:transform 1.45s cubic-bezier(.18,.82,.18,1),box-shadow 1.1s,opacity .45s ease!important;
+  opacity:1!important;
+  visibility:visible!important;
+  overflow:hidden!important;
+  z-index:3!important;
+}
+#family .choice-envelope.opening .choice-envelope-paper{
+  transform:translate(-50%,34px) scale(.76)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  z-index:3!important;
+}
+#family .choice-envelope.open .choice-envelope-paper{
+  transform:translate(-50%,-122px) scale(1)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  z-index:8!important;
+}
+#family .choice-envelope.open .choice-envelope-front,
+#family .choice-envelope.open .choice-envelope-flap{
+  opacity:.0!important;
+  pointer-events:none!important;
+  transition:opacity .55s ease .35s!important;
+}
+#family .choice-envelope.opening .choice-envelope-front{z-index:6!important;opacity:1!important;}
+#family .choice-envelope.opening .choice-envelope-flap{z-index:7!important;opacity:1!important;}
+#family .choice-envelope.open .choice-envelope-front{z-index:4!important;}
+#family .choice-envelope.open .choice-envelope-flap{z-index:6!important;}
+#family .choice-letter-writing p{font-family:'Cormorant Garamond',serif!important;font-size:20px!important;line-height:1.22!important;margin:0 0 10px!important;}
+#family .choice-letter-writing p:first-child{font-weight:600!important;}
+#family .choice-letter-hint{display:none!important;}
+#family #branchNext{
+  position:absolute!important;
+  left:50%!important;
+  right:auto!important;
+  bottom:8px!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+  z-index:25!important;
+}
+#family #branchNext:hover{transform:translateX(-50%) translateY(-2px)!important;}
+@media(max-width:700px){
+  #family .choice-letter-wrap{height:58dvh!important;}
+  #family .choice-envelope{width:90vw!important;height:190px!important;}
+  #family .choice-envelope-paper{width:88vw!important;height:220px!important;padding:18px 20px!important;}
+  #family .choice-letter-writing p{font-size:17px!important;line-height:1.18!important;}
+  #family #branchNext{bottom:6px!important;}
+}
+
+/* Small-height protection for the family branch: reduce the photograph before
+   reducing the letter, keeping both branches inside one cinematic viewport. */
+@media (min-width:701px) and (max-height:760px){
+  #family .family-photo{height:min(48dvh,390px)!important;}
+  #family .choice-letter-wrap{height:50dvh!important;}
+  #family .choice-envelope{height:190px!important;}
+  #family .choice-envelope-paper{height:220px!important;}
+}
+/* Keep the corrected rails straight: spacing is easier to read and guarantees
+   that neighboring cards cannot touch at their rotated corners. */
+.memory-rope-card,
+.moving-polaroid{transform:none!important;}
+
+/* Age clock: no artificial panel height; the five counters stay as a compact
+   row directly beneath the live age, which keeps the whole scene inside short
+   viewports without changing the counter styling itself. */
+#lifeClock .age-panel{
+  min-height:0!important;
+  height:auto!important;
+  margin-top:14px!important;
+  padding:0!important;
+  gap:10px!important;
+}
+#lifeClock .age-panel > div{min-width:94px!important;padding:12px 10px!important;}
+@media(max-width:1000px){#lifeClock .age-panel > div{min-width:78px!important;padding:10px 8px!important;}}
+@media(max-width:700px){#lifeClock .age-panel{gap:6px!important;}#lifeClock .age-panel > div{min-width:60px!important;padding:8px 5px!important;}}
+/* Equal-specificity lock for the straight-rail requirement: the older
+   nth-child tilt rules must not reintroduce rotation. */
+.memory-rope-card:nth-child(n),
+.moving-polaroid:nth-child(n){transform:none!important;}
+
+/* Narrow-screen rail containment: the manual Polaroid window stays fully
+   inside the viewport; its track may extend horizontally only inside the
+   clipped window for drag navigation. */
+.polaroid-scene .center.wide{
+  width:min(1120px,92vw)!important;
+  max-width:min(1120px,92vw)!important;
+}
+.polaroid-window{width:100%!important;max-width:100%!important;}
+
+/* Extra narrow rail sizing: four Polaroids remain comfortably readable inside
+   the viewport while the source images stay complete and non-overlapping. */
+@media (max-width:950px){
+  .polaroid-track{gap:12px!important;}
+  .moving-polaroid[data-orientation="landscape"]{width:280px!important;flex-basis:280px!important;}
+  .moving-polaroid[data-orientation="portrait"]{width:150px!important;flex-basis:150px!important;}
+  .moving-polaroid[data-orientation="landscape"] .polaroid-photo{width:268px!important;height:200px!important;}
+  .moving-polaroid[data-orientation="portrait"] .polaroid-photo{width:130px!important;height:200px!important;}
+}
+@media (max-width:700px){
+  .polaroid-track{gap:10px!important;}
+  .moving-polaroid[data-orientation="landscape"]{width:230px!important;flex-basis:230px!important;}
+  .moving-polaroid[data-orientation="portrait"]{width:135px!important;flex-basis:135px!important;}
+  .moving-polaroid[data-orientation="landscape"] .polaroid-photo{width:218px!important;height:180px!important;}
+  .moving-polaroid[data-orientation="portrait"] .polaroid-photo{width:115px!important;height:180px!important;}
+}
+
+/* Keep the existing avatar stage inside the narrow viewport as well; this only
+   removes the few extra pixels created by the legacy full-viewport rail. */
+@media(max-width:950px){#family .authors{width:calc(100vw - 24px)!important;max-width:calc(100vw - 24px)!important;}}
+/* Once the moon is touched, the old touch prompt no longer reserves any space
+   in the centered arrival composition. */
+#arrival .post-moon-hidden{display:none!important;}
+
+/* Keep the complete Polaroid card (including its caption) inside the clipped
+   viewing window. The photo itself remains uncropped. */
+.polaroid-window{height:min(46dvh,440px)!important;}
+@media(max-width:950px){.polaroid-window{height:min(42dvh,330px)!important;}}
+@media(max-width:700px){.polaroid-window{height:min(40dvh,280px)!important;}}
+
+/* Final narrow-rail fit: shorten only the visual scale, never the source image. */
+.polaroid-track{padding-top:60px!important;}
+@media(max-width:950px){
+  .polaroid-window{height:min(60dvh,370px)!important;}
+  .moving-polaroid[data-orientation="landscape"] .polaroid-photo{height:180px!important;width:240px!important;}
+  .moving-polaroid[data-orientation="portrait"] .polaroid-photo{height:180px!important;width:117px!important;}
+}
+@media(max-width:700px){
+  .polaroid-window{height:min(60dvh,300px)!important;}
+  .moving-polaroid[data-orientation="landscape"] .polaroid-photo{height:160px!important;width:213px!important;}
+  .moving-polaroid[data-orientation="portrait"] .polaroid-photo{height:160px!important;width:103px!important;}
+}
+@media(max-width:950px){.polaroid-window{height:min(61dvh,370px)!important;}}
+@media(max-width:700px){.polaroid-window{height:min(60dvh,340px)!important;}}
+
+/* FINAL USER REQUEST — shared Polaroid corrections only.
+   Captions sit below the photo, use a bold dark treatment, and the top edge
+   of each hanging pin meets the rope. Applies to every shared Polaroid rail. */
+.memory-rope-card,
+.moving-polaroid{
+  height:auto!important;
+}
+.memory-rope-card>span{
+  position:relative!important;
+  left:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  display:block!important;
+  width:100%!important;
+  margin:8px 0 0!important;
+  padding:0 4px!important;
+  color:#171411!important;
+  font-family:'Cormorant Garamond',serif!important;
+  font-weight:700!important;
+  font-size:15px!important;
+  line-height:1.08!important;
+  text-align:center!important;
+}
+.moving-polaroid figcaption{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  min-height:0!important;
+  margin:8px 0 0!important;
+  padding:0 4px!important;
+  color:#171411!important;
+  font-family:'Cormorant Garamond',serif!important;
+  font-weight:700!important;
+  font-size:16px!important;
+  line-height:1.08!important;
+  text-align:center!important;
+}
+/* The rope meets the top edge of the pin; the card remains suspended below it. */
+.memory-rope-card .memory-pin{
+  top:-33px!important;
+}
+.moving-polaroid .polaroid-pin{
+  top:-13px!important;
+}
+@media(max-width:700px){
+  .memory-rope-card>span{font-size:13px!important;}
+  .moving-polaroid figcaption{font-size:13px!important;}
+}
+
+/* FINAL USER REQUEST — Polaroid alignment, uniform height, and vertical spacing only. */
+/* Keep every hanging Polaroid the same overall height so captions have a
+   consistent lower area and no card becomes shorter because of its text. */
+.memory-rope-card,
+.moving-polaroid{
+  height:380px!important;
+  min-height:380px!important;
+  max-height:380px!important;
+}
+
+/* Give every Polaroid a larger, uniform photo area while retaining the
+   existing contain behavior so source images are not cropped. */
+.memory-rope-card .memory-photo,
+.moving-polaroid .polaroid-photo{
+  height:292px!important;
+}
+
+/* The pin is one continuous hanging piece: its top reaches the rope and its
+   bottom edge meets the top edge of the Polaroid. */
+.memory-rope-card .memory-pin,
+.moving-polaroid .polaroid-pin{
+  height:34px!important;
+  top:-34px!important;
+}
+
+/* Move the Real Memories hanging rail slightly upward within a taller
+   centered stage so the card group and its caption stay in the middle band. */
+#memories .rope-gallery{
+  top:47%!important;
+  height:min(58dvh,500px)!important;
+}
+
+/* Keep the caption safely between the Polaroid rail and the controls. */
+#memories .memory-caption{
+  bottom:145px!important;
+}
+#memories .memory-controls{
+  bottom:62px!important;
+}
+#memories .floating-next{
+  bottom:12px!important;
+}
+
+/* Give the other shared hanging-Polaroid rails enough vertical room for the
+   same uniform card height without changing their existing horizontal behavior. */
+.polaroid-window{
+  height:min(58dvh,500px)!important;
+}
+.polaroid-track{
+  padding-top:60px!important;
+}
+
+@media(max-width:1000px){
+  .memory-rope-card,
+  .moving-polaroid{
+    height:350px!important;
+    min-height:350px!important;
+    max-height:350px!important;
+  }
+  .memory-rope-card .memory-photo,
+  .moving-polaroid .polaroid-photo{
+    height:264px!important;
+  }
+  #memories .rope-gallery{height:min(56dvh,430px)!important;}
+}
+
+@media(max-width:700px){
+  .memory-rope-card,
+  .moving-polaroid{
+    height:315px!important;
+    min-height:315px!important;
+    max-height:315px!important;
+  }
+  .memory-rope-card .memory-photo,
+  .moving-polaroid .polaroid-photo{
+    height:230px!important;
+  }
+  #memories .rope-gallery{top:45%!important;height:min(54dvh,360px)!important;}
+  #memories .memory-caption{bottom:120px!important;}
+  #memories .memory-controls{bottom:58px!important;}
+  #memories .floating-next{bottom:10px!important;}
+  .polaroid-window{height:min(54dvh,360px)!important;}
+}
+
+/* FINAL POLAROID FIT — exact 2.5% / 75% / 20% / 2.5% card geometry.
+   Shared by every hanging Polaroid rail: Real, Private, Imagined, Featured. */
+.memory-rope-card,
+.moving-polaroid{
+  box-sizing:border-box!important;
+  height:340px!important;
+  min-height:340px!important;
+  max-height:340px!important;
+  padding:0!important;
+  display:grid!important;
+  grid-template-rows:2.5% 75% 20% 2.5%!important;
+  align-content:stretch!important;
+  overflow:visible!important;
+}
+
+.memory-rope-card .memory-photo,
+.moving-polaroid .polaroid-photo{
+  grid-row:2!important;
+  width:95%!important;
+  height:100%!important;
+  margin:0 auto!important;
+  background:#ddd!important;
+  overflow:hidden!important;
+}
+
+.memory-rope-card .memory-photo img,
+.moving-polaroid .polaroid-photo img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  display:block!important;
+  background:#ddd!important;
+}
+
+.memory-rope-card>span,
+.moving-polaroid figcaption{
+  position:static!important;
+  grid-row:3!important;
+  width:95%!important;
+  height:100%!important;
+  margin:0 auto!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+  text-align:center!important;
+  box-sizing:border-box!important;
+  font-family:'Cormorant Garamond',serif!important;
+  font-size:15px!important;
+  font-weight:700!important;
+  line-height:1.08!important;
+  color:#211d19!important;
+}
+
+/* The clip spans the exact gap between the rope and the card. */
+.memory-rope-track,
+.polaroid-track{
+  padding-top:76px!important;
+}
+.memory-rope-track::before,
+.polaroid-track::before{
+  top:60px!important;
+}
+.memory-rope-card .memory-pin,
+.moving-polaroid .polaroid-pin{
+  top:-16px!important;
+  height:16px!important;
+  z-index:7!important;
+}
+
+/* Keep the hanging-card group vertically centered in its interaction window. */
+.rope-gallery{
+  height:min(60dvh,500px)!important;
+}
+.polaroid-window{
+  height:min(60dvh,500px)!important;
+}
+
+@media(max-width:1000px){
+  .memory-rope-card,
+  .moving-polaroid{
+    height:340px!important;
+    min-height:340px!important;
+    max-height:340px!important;
+  }
+  .memory-rope-track,
+  .polaroid-track{padding-top:76px!important;}
+  .memory-rope-track::before,
+  .polaroid-track::before{top:60px!important;}
+  .memory-rope-card .memory-pin,
+  .moving-polaroid .polaroid-pin{top:-16px!important;height:16px!important;}
+  .rope-gallery,.polaroid-window{height:min(60dvh,500px)!important;}
+}
+
+@media(max-width:700px){
+  .memory-rope-card,
+  .moving-polaroid{
+    height:315px!important;
+    min-height:315px!important;
+    max-height:315px!important;
+  }
+  .memory-rope-track,
+  .polaroid-track{padding-top:70px!important;}
+  .memory-rope-track::before,
+  .polaroid-track::before{top:54px!important;}
+  .memory-rope-card .memory-pin,
+  .moving-polaroid .polaroid-pin{top:-16px!important;height:16px!important;}
+  .rope-gallery,.polaroid-window{height:min(58dvh,390px)!important;}
+}
+
+
+/* FINAL APPROVED POLAROID FIT — exact 2.5% / 75% / 2.5% / 17.5% / 2.5% card geometry.
+   Shared by every hanging Polaroid rail: Real, Private, Imagined, Featured.
+   Card width is supplied by JS from each source image's natural aspect ratio. */
+.memory-rope-card,
+.moving-polaroid{
+  box-sizing:border-box!important;
+  width:var(--polaroid-width)!important;
+  flex:0 0 var(--polaroid-width)!important;
+  height:340px!important;
+  min-height:340px!important;
+  max-height:340px!important;
+  padding:0!important;
+  display:grid!important;
+  grid-template-rows:2.5% 75% 2.5% 17.5% 2.5%!important;
+  align-content:stretch!important;
+  overflow:visible!important;
+}
+.memory-rope-card .memory-photo,
+.moving-polaroid .polaroid-photo{
+  grid-row:2!important;
+  width:95%!important;
+  height:100%!important;
+  margin:0 auto!important;
+  background:#ddd!important;
+  overflow:hidden!important;
+}
+.memory-rope-card .memory-photo img,
+.moving-polaroid .polaroid-photo img{
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  display:block!important;
+}
+.memory-rope-card>span,
+.moving-polaroid figcaption{
+  position:static!important;
+  grid-row:4!important;
+  width:95%!important;
+  height:100%!important;
+  margin:0 auto!important;
+  padding:0 4px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+  text-align:center!important;
+  color:#211d19!important;
+  font-family:'Cormorant Garamond',serif!important;
+  font-size:15px!important;
+  font-weight:700!important;
+  line-height:1.08!important;
+}
+.memory-rope-card .memory-pin,
+.moving-polaroid .polaroid-pin{
+  top:-16px!important;
+  height:16px!important;
+  z-index:7!important;
+}
+@media(max-width:1000px){
+  .memory-rope-card,.moving-polaroid{
+    height:340px!important;min-height:340px!important;max-height:340px!important;
+  }
+}
+@media(max-width:700px){
+  .memory-rope-card,.moving-polaroid{
+    height:315px!important;min-height:315px!important;max-height:315px!important;
+  }
+  .memory-rope-card>span,.moving-polaroid figcaption{font-size:13px!important;}
+}
+
+/* FINAL POLAROID IMAGE-FIT CORRECTION — preserve the approved geometry.
+   The earlier orientation-specific fixed widths/heights are overridden here so
+   every image fills the complete 75% image zone and the card width can expand
+   to the source image's natural aspect ratio. */
+.memory-rope-card[data-orientation="portrait"],
+.memory-rope-card[data-orientation="landscape"],
+.moving-polaroid[data-orientation="portrait"],
+.moving-polaroid[data-orientation="landscape"]{
+  width:var(--polaroid-width)!important;
+  flex-basis:var(--polaroid-width)!important;
+}
+.memory-rope-card[data-orientation="portrait"] .memory-photo,
+.memory-rope-card[data-orientation="landscape"] .memory-photo,
+.moving-polaroid[data-orientation="portrait"] .polaroid-photo,
+.moving-polaroid[data-orientation="landscape"] .polaroid-photo{
+  width:95%!important;
+  height:100%!important;
+  margin:0 auto!important;
+}
+.memory-rope-card[data-orientation="portrait"] .memory-photo img,
+.memory-rope-card[data-orientation="landscape"] .memory-photo img,
+.moving-polaroid[data-orientation="portrait"] .polaroid-photo img,
+.moving-polaroid[data-orientation="landscape"] .polaroid-photo img{
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  display:block!important;
+}
+
+/* FINAL LETTER PAPER / CONTENT PASS — scoped only to the two existing letter interfaces. */
+#message .sealed-letter.opened .envelope-paper{
+  position:fixed!important;
+  left:50%!important;
+  top:50%!important;
+  right:auto!important;
+  bottom:auto!important;
+  width:min(760px,86vw)!important;
+  height:min(60dvh,620px)!important;
+  max-width:none!important;
+  padding:0!important;
+  margin:0!important;
+  transform:translate(-50%,-50%)!important;
+  transform-origin:center center!important;
+  background:#f5ead8 url('assets/letter_paper_design.png') center center / cover no-repeat!important;
+  border:0!important;
+  border-radius:8px!important;
+  overflow:hidden!important;
+  box-shadow:0 30px 70px rgba(0,0,0,.48)!important;
+  z-index:80!important;
+  clip-path:none!important;
+}
+#message .sealed-letter.opened .envelope-back,
+#message .sealed-letter.opened .envelope-front,
+#message .sealed-letter.opened .envelope-flap{
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+#message .sealed-letter.opened .envelope-paper-inner{
+  position:relative!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  display:block!important;
+  padding:0!important;
+  overflow:hidden!important;
+  font-family:'Cormorant Garamond',serif!important;
+  font-size:18px!important;
+  line-height:1.5!important;
+  text-align:left!important;
+  color:#3b342d!important;
+}
+#message .sealed-letter.opened .letter-writing-area{
+  position:absolute!important;
+  left:10.5%!important;
+  right:9.5%!important;
+  top:18%!important;
+  bottom:14%!important;
+  width:auto!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:8px 10px 26px!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  scrollbar-width:thin!important;
+  scrollbar-color:rgba(130,93,61,.55) transparent!important;
+  background:
+    repeating-linear-gradient(to bottom,rgba(102,91,78,.075) 0,rgba(102,91,78,.075) 1px,transparent 1px,transparent 30px),
+    #f5ead8!important;
+  border-radius:5px!important;
+  box-sizing:border-box!important;
+}
+#message .sealed-letter.opened .letter-writing-area::-webkit-scrollbar{width:7px!important;}
+#message .sealed-letter.opened .letter-writing-area::-webkit-scrollbar-track{background:transparent!important;}
+#message .sealed-letter.opened .letter-writing-area::-webkit-scrollbar-thumb{background:rgba(130,93,61,.45)!important;border-radius:999px!important;}
+#message .sealed-letter.opened .letter-writing-area p{
+  margin:0 0 14px!important;
+  min-height:1em!important;
+  font-family:'Cormorant Garamond',serif!important;
+  font-size:18px!important;
+  line-height:1.5!important;
+  color:#3b342d!important;
+  text-align:left!important;
+}
+#message .sealed-letter.opened .letter-writing-area .letter-greeting,
+#message .sealed-letter.opened .letter-writing-area .letter-closing{font-weight:600!important;}
+#message .sealed-letter.opened .letter-writing-area strong{font-weight:700!important;}
+#message .sealed-letter.opened .envelope-paper + *{pointer-events:none!important;}
+#message .sealed-letter.opened ~ .tap-hint{
+  position:fixed!important;
+  left:50%!important;
+  top:calc(50% + min(29dvh,310px) + 22px)!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+  z-index:85!important;
+  min-height:0!important;
+  white-space:nowrap!important;
+}
+#message .sealed-letter.opened ~ #messageNext{
+  position:fixed!important;
+  left:50%!important;
+  top:calc(50% + min(29dvh,310px) + 72px)!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+  z-index:85!important;
+}
+#message .sealed-letter.opened ~ #messageNext:hover{transform:translateX(-50%) translateY(-2px)!important;}
+
+/* Family/Own Path letter: same paper, same centered final presentation and a
+   protected scroll region, while preserving its existing envelope sequence. */
+#family .choice-envelope.open .choice-envelope-paper{
+  position:fixed!important;
+  left:50%!important;
+  top:50%!important;
+  right:auto!important;
+  bottom:auto!important;
+  width:min(760px,86vw)!important;
+  height:min(64dvh,560px)!important;
+  max-width:none!important;
+  padding:0!important;
+  margin:0!important;
+  transform:translate(-50%,-50%)!important;
+  transform-origin:center center!important;
+  background:#f5ead8 url('assets/letter_paper_design.png') center center / cover no-repeat!important;
+  border:0!important;
+  border-radius:8px!important;
+  overflow:hidden!important;
+  box-shadow:0 30px 70px rgba(0,0,0,.48)!important;
+  z-index:80!important;
+  clip-path:none!important;
+  color:#3b342d!important;
+}
+#family .choice-envelope.open .choice-envelope-front,
+#family .choice-envelope.open .choice-envelope-flap{
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+#family .choice-envelope.open .choice-envelope-paper .choice-letter-writing{
+  position:absolute!important;
+  left:10.5%!important;
+  right:9.5%!important;
+  top:18%!important;
+  bottom:14%!important;
+  width:auto!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:8px 10px 26px!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  scrollbar-width:thin!important;
+  scrollbar-color:rgba(130,93,61,.55) transparent!important;
+  background:
+    repeating-linear-gradient(to bottom,rgba(102,91,78,.075) 0,rgba(102,91,78,.075) 1px,transparent 1px,transparent 30px),
+    #f5ead8!important;
+  border-radius:5px!important;
+  box-sizing:border-box!important;
+  font-family:'Cormorant Garamond',serif!important;
+  font-size:18px!important;
+  line-height:1.5!important;
+  text-align:left!important;
+  color:#3b342d!important;
+}
+#family .choice-envelope.open .choice-letter-writing::-webkit-scrollbar{width:7px!important;}
+#family .choice-envelope.open .choice-letter-writing::-webkit-scrollbar-track{background:transparent!important;}
+#family .choice-envelope.open .choice-letter-writing::-webkit-scrollbar-thumb{background:rgba(130,93,61,.45)!important;border-radius:999px!important;}
+#family .choice-envelope.open .choice-letter-writing p{
+  margin:0 0 14px!important;
+  font-family:'Cormorant Garamond',serif!important;
+  font-size:18px!important;
+  line-height:1.5!important;
+  color:#3b342d!important;
+  text-align:left!important;
+}
+#family .choice-envelope.open ~ .choice-letter-hint{display:none!important;}
+#family .choice-envelope.open ~ *{z-index:85!important;}
+
+@media(max-width:700px){
+  #message .sealed-letter.opened .envelope-paper{
+    width:92vw!important;
+    height:min(62dvh,500px)!important;
+  }
+  #message .sealed-letter.opened .letter-writing-area{
+    left:9%!important;right:8%!important;top:16%!important;bottom:12%!important;
+  }
+  #message .sealed-letter.opened .letter-writing-area p{
+    font-size:16px!important;line-height:1.42!important;margin-bottom:12px!important;
+  }
+  #message .sealed-letter.opened ~ .tap-hint{
+    top:calc(50% + min(28dvh,250px) + 18px)!important;
+  }
+  #message .sealed-letter.opened ~ #messageNext{
+    top:calc(50% + min(28dvh,250px) + 64px)!important;
+  }
+  #family .choice-envelope.open .choice-envelope-paper{
+    width:92vw!important;
+    height:min(58dvh,450px)!important;
+  }
+  #family .choice-envelope.open .choice-letter-writing{
+    left:9%!important;right:8%!important;top:16%!important;bottom:12%!important;
+  }
+  #family .choice-envelope.open .choice-letter-writing p{
+    font-size:16px!important;line-height:1.42!important;margin-bottom:12px!important;
+  }
+}
+
+
+/* LETTER MICRO-FIX: once the paper is fully presented, lift only the existing
+   scene intro so it never sits underneath the paper. The paper/content layout
+   and all other scene elements remain unchanged. */
+#message .letter-scene-intro{
+  transition:transform 1.45s cubic-bezier(.18,.82,.18,1)!important;
+}
+#message.letter-opened .letter-scene-intro{
+  transform:translateY(calc(-1 * min(11dvh,105px)))!important;
+}
+#family .choice-letter-intro{
+  transition:transform 1.45s cubic-bezier(.18,.82,.18,1)!important;
+}
+#family .choice-letter-wrap.letter-opened .choice-letter-intro{
+  transform:translateY(calc(-1 * min(11dvh,105px)))!important;
+}
+
+/* =========================================================
+   AVATAR-ONLY FINAL MOTION PASS
+   Replace the previous static/float avatar forms with two
+   human-like full-body figures. No other scene geometry is changed.
+   ========================================================= */
+#family .authors .author{
+  width:96px!important;
+  top:0!important;
+  transition:left 2.2s cubic-bezier(.2,.8,.2,1)!important;
+}
+#family .authors .avatar-3d{
+  position:relative!important;
+  width:78px!important;
+  height:92px!important;
+  display:block!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+  transform:none!important;
+  animation:avatarWalkBob .42s ease-in-out infinite alternate!important;
+}
+#family .avatar-head{
+  position:absolute!important;
+  left:24px!important;
+  top:4px!important;
+  width:31px!important;
+  height:34px!important;
+  border-radius:48% 48% 45% 45%!important;
+  background:linear-gradient(145deg,#f5dfcd 0%,#d3ad93 58%,#b7866d 100%)!important;
+  box-shadow:inset -4px -5px 7px rgba(0,0,0,.14),0 1px 2px rgba(0,0,0,.2)!important;
+  z-index:5!important;
+}
+#family .avatar-hair{
+  position:absolute!important;
+  left:21px!important;
+  top:0!important;
+  width:37px!important;
+  height:19px!important;
+  border-radius:55% 55% 42% 42%!important;
+  background:linear-gradient(145deg,#30241e,#090807)!important;
+  z-index:7!important;
+}
+#family .avatar-face{
+  position:absolute!important;
+  left:32px!important;
+  top:22px!important;
+  width:16px!important;
+  height:6px!important;
+  border-top:2px solid rgba(75,42,30,.62)!important;
+  border-radius:50%!important;
+  z-index:8!important;
+}
+#family .avatar-body{
+  position:absolute!important;
+  left:20px!important;
+  bottom:26px!important;
+  width:39px!important;
+  height:34px!important;
+  border-radius:15px 15px 8px 8px!important;
+  background:linear-gradient(145deg,#393432,#11100f)!important;
+  box-shadow:inset -5px -4px 8px rgba(0,0,0,.25),inset 5px 4px 7px rgba(255,255,255,.08)!important;
+  z-index:4!important;
+}
+#family .avatar-arm,
+#family .avatar-leg{
+  position:absolute!important;
+  display:block!important;
+  transform-origin:50% 8%!important;
+  border-radius:999px!important;
+  z-index:3!important;
+}
+#family .avatar-arm{
+  width:8px!important;
+  height:31px!important;
+  top:39px!important;
+  background:linear-gradient(180deg,#cda68d,#9c725e)!important;
+}
+#family .avatar-arm-left{left:15px!important;transform:rotate(18deg)!important;}
+#family .avatar-arm-right{left:55px!important;transform:rotate(-18deg)!important;}
+#family .avatar-leg{
+  width:10px!important;
+  height:31px!important;
+  bottom:0!important;
+  background:linear-gradient(180deg,#252321,#0b0a09)!important;
+  transform-origin:50% 4px!important;
+}
+#family .avatar-leg-left{left:27px!important;transform:rotate(5deg)!important;}
+#family .avatar-leg-right{left:43px!important;transform:rotate(-5deg)!important;}
+#family .avatar-leg::after{
+  content:"";position:absolute;left:-4px;bottom:-3px;width:19px;height:7px;border-radius:80% 45% 45% 70%;background:#151311;box-shadow:0 2px 4px rgba(0,0,0,.3);
+}
+#family .avatar-potti .avatar-hair{
+  height:25px!important;
+  width:40px!important;
+  left:20px!important;
+  top:-1px!important;
+  border-radius:54% 54% 45% 45%!important;
+  background:linear-gradient(145deg,#241d19,#080706)!important;
+}
+#family .avatar-potti .avatar-body{background:linear-gradient(145deg,#805f58,#211816)!important;}
+#family .avatar-potti .avatar-arm{background:linear-gradient(180deg,#d4ad92,#a47762)!important;}
+#family .avatar-potti .avatar-leg{background:linear-gradient(180deg,#4b3834,#171210)!important;}
+
+/* The active travel uses the existing left/right position animation. These
+   limb animations add a walking/run gait without changing the stage. */
+#family .authors.active .avatar-3d{
+  animation:avatarRunBob .28s ease-in-out infinite alternate!important;
+}
+#family .authors.active .avatar-arm-left{animation:avatarArmL .42s ease-in-out infinite alternate!important;}
+#family .authors.active .avatar-arm-right{animation:avatarArmR .42s ease-in-out infinite alternate!important;}
+#family .authors.active .avatar-leg-left{animation:avatarLegL .42s ease-in-out infinite alternate!important;}
+#family .authors.active .avatar-leg-right{animation:avatarLegR .42s ease-in-out infinite alternate!important;}
+
+/* Once they meet, stop the running gait and bring their inner arms together. */
+#family .authors.hug .avatar-3d{animation:avatarHugBob 2.2s ease-in-out infinite!important;}
+#family .authors.hug .avatar-arm-left{animation:avatarHugLeft .7s ease-in-out forwards!important;}
+#family .authors.hug .avatar-arm-right{animation:avatarHugRight .7s ease-in-out forwards!important;}
+#family .authors.hug .avatar-leg-left,
+#family .authors.hug .avatar-leg-right{animation:avatarHugLegs .9s ease-in-out forwards!important;}
+#family .authors.hug .avatar-hair{animation:avatarHugHair 2.2s ease-in-out infinite!important;}
+
+@keyframes avatarWalkBob{from{transform:translateY(0)}to{transform:translateY(-1px)}}
+@keyframes avatarRunBob{from{transform:translateY(0) rotate(-1deg)}to{transform:translateY(-4px) rotate(1deg)}}
+@keyframes avatarArmL{from{transform:rotate(30deg)}to{transform:rotate(-35deg)}}
+@keyframes avatarArmR{from{transform:rotate(-35deg)}to{transform:rotate(30deg)}}
+@keyframes avatarLegL{from{transform:rotate(24deg)}to{transform:rotate(-24deg)}}
+@keyframes avatarLegR{from{transform:rotate(-24deg)}to{transform:rotate(24deg)}}
+@keyframes avatarHugLeft{to{transform:rotate(66deg) translate(-1px,2px)}}
+@keyframes avatarHugRight{to{transform:rotate(-66deg) translate(1px,2px)}}
+@keyframes avatarHugLegs{to{transform:rotate(0)}}
+@keyframes avatarHugBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes avatarHugHair{50%{transform:translateY(-1px)}}
+
+@media(max-width:700px){
+  #family .authors .author{width:84px!important;}
+  #family .authors .avatar-3d{transform:scale(.88);transform-origin:center bottom;}
+  #family .authors.active .avatar-3d{animation:avatarRunBobMobile .28s ease-in-out infinite alternate!important;}
+  @keyframes avatarRunBobMobile{from{transform:scale(.88) translateY(0) rotate(-1deg)}to{transform:scale(.88) translateY(-3px) rotate(1deg)}}
+}
+/* Face the two characters toward one another while keeping their shared
+   travel path and hug timing unchanged. */
+#family .avatar-hemanth .avatar-face{left:34px!important;}
+#family .avatar-potti .avatar-face{left:20px!important;}
+@media(max-width:700px){
+  #family .authors{height:96px!important;overflow:visible!important;}
+}
+
+/* =========================================================
+   AVATAR APPEARANCE — CHIBI COUPLE MATCH PASS
+   Only replaces the avatar artwork/animation; scene geometry,
+   photo, title and promise button remain untouched.
+   ========================================================= */
+#family .authors .avatar-illustration{
+  width:104px!important;
+  height:130px!important;
+  display:block!important;
+  overflow:visible!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  filter:drop-shadow(0 8px 9px rgba(0,0,0,.28)) drop-shadow(0 0 10px rgba(255,166,130,.16))!important;
+  transform-origin:50% 100%!important;
+  animation:chibiIdle 2.4s ease-in-out infinite!important;
+}
+#family .authors .avatar-illustration .avatar-run-body{transform-origin:60px 143px;}
+#family .authors .avatar-illustration .avatar-boy-arm-left,
+#family .authors .avatar-illustration .avatar-boy-arm-right,
+#family .authors .avatar-illustration .avatar-boy-leg-left,
+#family .authors .avatar-illustration .avatar-boy-leg-right,
+#family .authors .avatar-illustration .avatar-girl-arm-left,
+#family .authors .avatar-illustration .avatar-girl-arm-right,
+#family .authors .avatar-illustration .avatar-girl-leg-left,
+#family .authors .avatar-illustration .avatar-girl-leg-right{
+  transform-box:fill-box!important;
+  transform-origin:center!important;
+}
+#family .authors.active .avatar-illustration{
+  animation:chibiRun .28s ease-in-out infinite alternate!important;
+}
+#family .authors.active .avatar-hemanth .avatar-boy-arm-left,
+#family .authors.active .avatar-potti .avatar-girl-arm-left{animation:chibiArmL .36s ease-in-out infinite alternate!important;}
+#family .authors.active .avatar-hemanth .avatar-boy-arm-right,
+#family .authors.active .avatar-potti .avatar-girl-arm-right{animation:chibiArmR .36s ease-in-out infinite alternate!important;}
+#family .authors.active .avatar-hemanth .avatar-boy-leg-left,
+#family .authors.active .avatar-potti .avatar-girl-leg-left{animation:chibiLegL .36s ease-in-out infinite alternate!important;}
+#family .authors.active .avatar-hemanth .avatar-boy-leg-right,
+#family .authors.active .avatar-potti .avatar-girl-leg-right{animation:chibiLegR .36s ease-in-out infinite alternate!important;}
+#family .authors.hug .author-h{transform:translateX(calc(50% - 48px)) rotate(1deg)!important;}
+#family .authors.hug .author-p{transform:translateX(calc(-50% + 48px)) rotate(-1deg)!important;}
+#family .authors.hug .avatar-illustration{animation:chibiHugBob 2.1s ease-in-out infinite!important;}
+#family .authors.hug .avatar-hemanth .avatar-boy-arm-left,
+#family .authors.hug .avatar-hemanth .avatar-boy-arm-right,
+#family .authors.hug .avatar-potti .avatar-girl-arm-left,
+#family .authors.hug .avatar-potti .avatar-girl-arm-right{animation:chibiHugArms .7s ease-in-out forwards!important;}
+#family .authors.hug::after{
+  content:'♥';
+  position:absolute!important;
+  left:50%!important;
+  top:8px!important;
+  transform:translateX(-50%) scale(.8)!important;
+  color:#ff9eae!important;
+  font-size:20px!important;
+  line-height:1!important;
+  text-shadow:0 0 12px rgba(255,150,170,.7)!important;
+  animation:chibiHeart 1.4s ease-in-out infinite!important;
+  pointer-events:none!important;
+}
+@keyframes chibiIdle{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-2px) rotate(.5deg)}}
+@keyframes chibiRun{from{transform:translateY(0) rotate(-1.2deg)}to{transform:translateY(-4px) rotate(1.2deg)}}
+@keyframes chibiArmL{from{transform:rotate(6deg)}to{transform:rotate(-10deg)}}
+@keyframes chibiArmR{from{transform:rotate(-10deg)}to{transform:rotate(6deg)}}
+@keyframes chibiLegL{from{transform:rotate(5deg)}to{transform:rotate(-7deg)}}
+@keyframes chibiLegR{from{transform:rotate(-7deg)}to{transform:rotate(5deg)}}
+@keyframes chibiHugArms{from{transform:rotate(0deg)}to{transform:rotate(5deg) translateX(2px)}}
+@keyframes chibiHugBob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2px) scale(1.01)}}
+@keyframes chibiHeart{0%,100%{opacity:.35;top:8px;transform:translateX(-50%) scale(.72)}50%{opacity:1;top:1px;transform:translateX(-50%) scale(1)}}
+@media(max-width:700px){
+  #family .authors .avatar-illustration{width:90px!important;height:112px!important;}
+  #family .authors.hug .author-h{transform:translateX(calc(50% - 42px)) rotate(1deg)!important;}
+  #family .authors.hug .author-p{transform:translateX(calc(-50% + 42px)) rotate(-1deg)!important;}
+}
+
+/* =========================================================
+   FINAL AVATAR REALISM PASS — AVATAR FEATURE ONLY
+   Uses the approved cinematic chibi couple artwork as walking
+   frames, then transitions to the matching embrace artwork.
+   No other family-scene geometry or feature is changed.
+   ========================================================= */
+#family .authors{
+  width:min(620px,90vw)!important;
+  height:156px!important;
+  bottom:74px!important;
+  overflow:visible!important;
+  pointer-events:none!important;
+}
+#family .authors .author{
+  width:108px!important;
+  height:146px!important;
+  top:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:0!important;
+  transition:left 2.2s cubic-bezier(.2,.8,.2,1)!important;
+  transform:none!important;
+}
+#family .authors .author-h{left:0!important;right:auto!important;}
+#family .authors .author-p{left:auto!important;right:0!important;}
+#family .authors.active .author-h{left:calc(50% - 108px)!important;right:auto!important;}
+#family .authors.active .author-p{left:calc(50% + 0px)!important;right:auto!important;}
+#family .authors .author small{position:absolute!important;opacity:0!important;pointer-events:none!important;}
+#family .authors .avatar-real{
+  position:relative!important;
+  display:block!important;
+  flex:0 0 auto!important;
+  width:108px!important;
+  height:146px!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+  filter:drop-shadow(0 7px 7px rgba(0,0,0,.30)) drop-shadow(0 0 9px rgba(255,170,135,.16))!important;
+  transform-origin:50% 100%!important;
+}
+#family .authors .avatar-frame{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  background-repeat:no-repeat!important;
+  background-position:center bottom!important;
+  background-size:contain!important;
+  pointer-events:none!important;
+  opacity:0!important;
+}
+#family .avatar-hemanth .avatar-frame-a{background-image:url('assets/avatars/boy-walk-a.png')!important;opacity:1!important;}
+#family .avatar-hemanth .avatar-frame-b{background-image:url('assets/avatars/boy-walk-b.png')!important;}
+#family .avatar-potti .avatar-frame-a{background-image:url('assets/avatars/girl-walk-a.png')!important;opacity:1!important;}
+#family .avatar-potti .avatar-frame-b{background-image:url('assets/avatars/girl-walk-b.png')!important;}
+#family .authors.active .avatar-real{
+  animation:realChibiStride .52s ease-in-out infinite!important;
+}
+#family .authors.active .avatar-frame-a{animation:realChibiFrameA .52s steps(1,end) infinite!important;}
+#family .authors.active .avatar-frame-b{animation:realChibiFrameB .52s steps(1,end) infinite!important;}
+#family .authors.hug .author{opacity:0!important;}
+#family .authors.hug::after{
+  content:''!important;
+  position:absolute!important;
+  left:50%!important;
+  bottom:-2px!important;
+  width:136px!important;
+  height:158px!important;
+  transform:translateX(-50%)!important;
+  background:url('assets/avatars/couple-hug.png') center bottom / contain no-repeat!important;
+  opacity:1!important;
+  filter:drop-shadow(0 8px 8px rgba(0,0,0,.30)) drop-shadow(0 0 11px rgba(255,170,135,.18))!important;
+  pointer-events:none!important;
+  animation:realChibiHug .95s ease-in-out infinite!important;
+  z-index:12!important;
+}
+@keyframes realChibiStride{
+  0%,100%{transform:translateY(1px) rotate(-1deg)}
+  50%{transform:translateY(-3px) rotate(1deg)}
+}
+@keyframes realChibiFrameA{
+  0%,49.99%{opacity:1}
+  50%,100%{opacity:0}
+}
+@keyframes realChibiFrameB{
+  0%,49.99%{opacity:0}
+  50%,100%{opacity:1}
+}
+@keyframes realChibiHug{
+  0%,100%{transform:translateX(-50%) translateY(0) scale(1)}
+  50%{transform:translateX(-50%) translateY(-2px) scale(1.012)}
+}
+@media(max-width:700px){
+  #family .authors{width:min(430px,94vw)!important;height:132px!important;bottom:56px!important;}
+  #family .authors .author{width:92px!important;height:124px!important;}
+  #family .authors .avatar-real{width:92px!important;height:124px!important;}
+  #family .authors.active .author-h{left:calc(50% - 92px)!important;}
+  #family .authors.active .author-p{left:50%!important;right:auto!important;}
+  #family .authors.hug::after{width:104px!important;height:140px!important;bottom:-1px!important;}
+}
