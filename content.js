@@ -146,11 +146,11 @@ function getBirthdayPack(year = new Date().getFullYear()) {
 
 const PRIVATE_CODE_POOL = Object.freeze([
   { label: 'the day we first met', value: '04' },
-  { label: "Kanna's birthday date", value: '11' },
-  { label: "the last two digits of Kanna's phone number", value: '66' },
-  { label: "Kanna's birthday month", value: '07' },
+  { label: "of your Kanna's birthday date", value: '11' },
+  { label: "the last two digits of your Kanna's phone number", value: '66' },
+  { label: "of your Kanna's birthday month", value: '07' },
   { label: 'the month we first met', value: '01' },
-  { label: "the first two digits of Kanna's mobile number", value: '93' }
+  { label: "the first two digits of your Kanna's mobile number", value: '93' }
 ]);
 
 function shufflePrivatePool() {
