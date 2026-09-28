@@ -67,7 +67,7 @@ const PRIVATE_MEMORIES = [
   {src:'assets/private-memories/private-09.jpg', date:'14 Jun 2026', text:'Maybe this is what home felt like for a while.'},
   {src:'assets/private-memories/private-10.jpg', date:'12 Jun 2026', text:'And then there were moments when holding on said everything.'}
 ];
-const VIDEOS = ['assets/videos/memory-video-01.mp4','assets/videos/memory-video-02.mp4'];
+const VIDEOS = ['assets/videos/memory-video-01.mp4','assets/videos/memory-video-02.mp4','assets/videos/memory-video-03.mp4'];
 const TIMELINE = [
   {date:'JUNE 2021', title:'The First Connection', text:'Two paths quietly crossed on Instagram, without knowing where they would lead.'},
   {date:'SOMEWHERE ALONG THE WAY', title:'Senior & Junior', text:'You became Junior. I became Senior. Somehow, that little bond stayed.'},
