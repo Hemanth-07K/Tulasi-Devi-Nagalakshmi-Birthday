@@ -45,15 +45,16 @@ const MEMORIES = [
   {src:'assets/memories/memory-05.jpg', date:'17 Mar 2026', text:'And somehow, it all became part of the journey.'}
 ];
 const REAL_MEMORIES = [
-  {src:'assets/real-memories/real-memory-01.jpg', date:'', text:"Some people don't need the spotlight. Somehow, it finds them anyway."},
-  {src:'assets/real-memories/real-memory-02.jpg', date:'', text:"A simple moment. A familiar smile. Somehow, the little moments become the ones worth remembering."},
-  {src:'assets/real-memories/real-memory-03.jpg', date:'', text:"There is something about your smile that makes an ordinary moment feel a little softer."},
-  {src:'assets/real-memories/real-memory-04.jpg', date:'', text:"Somewhere between the mirror and that smile, you made the whole moment worth remembering."},
+  {src:'assets/real-memories/real-memory-01.jpg', date:'25 Dec 2025', text:"Some people don't need the spotlight. Somehow, it finds them anyway."},
+  {src:'assets/real-memories/real-memory-02.jpg', date:'13 Jun 2026', text:"A simple moment. A familiar smile. Somehow, the little moments become the ones worth remembering."},
+  {src:'assets/real-memories/real-memory-03.jpg', date:'29 Sep 2026', text:"Princess Birthday celebration in office."},
+  {src:'assets/real-memories/real-memory-04.jpg', date:'13 Jun 2026', text:"Somewhere between the mirror and that smile, you made the whole moment worth remembering."},
   {src:'assets/real-memories/real-memory-05.jpg', date:'', text:"Those eyes don't always say much. Somehow, they still say enough."},
-  {src:'assets/real-memories/real-memory-06.jpg', date:'', text:"Some moments aren't planned. They just become part of the story."},
-  {src:'assets/real-memories/real-memory-07.jpg', date:'', text:"You look beautiful in crowded places, but somehow, you belong to quiet moments too."},
+  {src:'assets/real-memories/real-memory-06.jpg', date:'12 Jun 2026', text:"Some moments aren't planned. They just become part of the story."},
+  {src:'assets/real-memories/real-memory-07.jpg', date:'13 Jun 2026', text:"You look beautiful in crowded places, but somehow, you belong to quiet moments too."},
   {src:'assets/real-memories/real-memory-08.jpg', date:'', text:"Some pictures capture a moment. Some quietly capture an entire version of you."},
-  {src:'assets/real-memories/real-memory-09.jpg', date:'', text:"And then there is you, simply being yourself — beautiful even on an ordinary day."}
+  {src:'assets/real-memories/real-memory-09.jpg', date:'08 Jan 2026', text:"And then there is you, simply being yourself - beautiful even on an ordinary day."},
+  {src:'assets/real-memories/real-memory-10.jpg', date:'02 Mar 2024', text:"There is something about your smile that makes an ordinary moment feel a little softer."}
 ];
 const PRIVATE_MEMORIES = [
   {src:'assets/private-memories/private-01.jpg', date:'', text:'For a moment, it felt like the world had quietly made room for just us.'},
@@ -65,27 +66,31 @@ const PRIVATE_MEMORIES = [
   {src:'assets/private-memories/private-07.jpg', date:'12 Jun 2026', text:'Just another ordinary day that somehow became one of my favourite memories.'},
   {src:'assets/private-memories/private-08.png', date:'13 Jun 2026', text:'You walked ahead… and I just wanted to keep following.'},
   {src:'assets/private-memories/private-09.jpg', date:'14 Jun 2026', text:'Maybe this is what home felt like for a while.'},
-  {src:'assets/private-memories/private-10.jpg', date:'12 Jun 2026', text:'And then there were moments when holding on said everything.'}
+  {src:'assets/private-memories/private-10.jpg', date:'12 Jun 2026', text:'And then there were moments when holding on said everything.'},
+  {src:'assets/private-memories/private-11.jpg', date:'27 Sep 2026', text:'The moment that we never forget.'}
 ];
 const VIDEOS = ['assets/videos/memory-video-01.mp4','assets/videos/memory-video-02.mp4','assets/videos/memory-video-03.mp4'];
 const TIMELINE = [
   {date:'JUNE 2021', title:'The First Connection', text:'Two paths quietly crossed on Instagram, without knowing where they would lead.'},
   {date:'SOMEWHERE ALONG THE WAY', title:'Senior & Junior', text:'You became Junior. I became Senior. Somehow, that little bond stayed.'},
   {date:'LATE 2024', title:'Finding Our Way Back', text:"Graduation was ending, conversations returned, and slowly, we became part of each other's days again."},
-  {date:'04 JAN 2025', title:'The First Meeting', text:'The person behind the screen became real — laughter, food, little moments, and a day to remember.'},
+  {date:'04 JAN 2025', title:'The First Meeting', text:'The person behind the screen became real - laughter, food, little moments, and a day to remember.'},
   {date:'27 OCT 2025', title:'Meeting Again', text:'After a while, we met again, shared a meal, and let an old connection find its way back.'},
   {date:'JANUARY 2026', title:'A Different Question', text:"I asked for a future together. You weren't ready to say yes, and some things needed time."},
-  {date:'15 MAR 2026', title:'The Turning Point', text:'One day in Hyderabad changed something between us. You saw my patience, my care, and the way I stood beside you — and that evening, you finally told me how you felt.'},
-  {date:'17 MAR 2026', title:'The Beginning of Us', text:'Two days later, we met again. Movies, laughter, photographs and countless little moments — and somewhere in that day, our “us” truly began.'},
-  {date:'AFTER 17 MAR 2026', title:'Learning Each Other', text:'We were learning how to love each other — not perfectly, but honestly.'},
+  {date:'15 MAR 2026', title:'The Turning Point', text:'One day in Hyderabad changed something between us. You saw my patience, my care, and the way I stood beside you - and that evening, you finally told me how you felt.'},
+  {date:'17 MAR 2026', title:'The Beginning of Us', text:'Two days later, we met again. Movies, laughter, photographs and countless little moments - and somewhere in that day, our “us” truly began.'},
+  {date:'AFTER 17 MAR 2026', title:'Learning Each Other', text:'We were learning how to love each other - not perfectly, but honestly.'},
+  {date:'ALONG THE WAY', title:'The Little Things', text:'Between the serious conversations were silly moments, unexpected laughter and memories that belonged only to us.'},
+  {date:'12–13 JUN 2026', title:'Two Days Together', text:'Food, streets, rain, Shilparamam, photographs and endless conversations - two days that gave us so many little memories.'},
+  {date:'13 JUN 2026', title:'A Little Promise', text:'Among all those moments, you asked me to place a chain around your neck - a little promise carrying a much bigger meaning.'},
+  {date:'11 JUL 2026', title:'A Birthday From Afar', text:"You couldn't be beside me, so you found a hundred little ways to make me feel remembered."},
   {date:'A LITTLE WHILE LATER', title:'Care Can Look Different', text:'Sometimes my care felt like control to you. I only knew I was trying to protect someone who had become precious to me.'},
   {date:'ALONG THE WAY', title:'The Little Fights', text:'There were arguments, stubborn silences and moments of “leave me alone.” Yet somehow, neither of us stayed away for long.'},
   {date:'ALONG THE WAY', title:'Finding Our Way Back', text:'Somehow, after every difficult moment, we found another reason to talk, laugh, care and stay.'},
-  {date:'ALONG THE WAY', title:'The Little Things', text:'Between the serious conversations were silly moments, unexpected laughter and memories that belonged only to us.'},
-  {date:'12–13 JUN 2026', title:'Two Days Together', text:'Food, streets, rain, Shilparamam, photographs and endless conversations — two days that gave us so many little memories.'},
-  {date:'13 JUN 2026', title:'A Little Promise', text:'Among all those moments, you asked me to place a chain around your neck — a little promise carrying a much bigger meaning.'},
-  {date:'11 JUL 2026', title:'A Birthday From Afar', text:"You couldn't be beside me, so you found a hundred little ways to make me feel remembered."},
-  {date:'AND THEN…', title:'Still Becoming Our Story', text:"We didn't have a perfect story. We had a real one — with laughter, fear, fights, care, forgiveness, and two people who kept finding their way back."}
+  {date:'26 SEP 2026', title:'A Birthday Before Its Day', text:'You opened the gift I had prepared for you - the little things I had chosen with you in mind. That night, we shared memories, laughter, and conversations that brought us a little closer.'},
+  {date:'27 Sep 2026', title:'A Night Across Hyderabad', text:'From late-night roads to Niloufer, Charminar, Tank Bund, and back again - we wandered, talked, ate, laughed, and made another day that felt completely ours.'},
+  {date:'29 Sep 2026', title:'The Day You Were Born', text:'At midnight, I wished you first - and watched my little surprise make you smile. You wore the dress I gave you, celebrated your day, and somewhere between it all, you told me you missed me.'},
+  {date:'AND THEN…', title:'Still Becoming Our Story', text:"We didn't have a perfect story. We had a real one - with laughter, fear, fights, care, forgiveness, and two people who kept finding their way back."}
 ];
 const HER_WORLD = [
   'You give so much love without even realizing how much you give.',
@@ -107,7 +112,7 @@ const LETTER_LINES = [
   '**Dear Potti,**',
   'Some people come into our lives quietly, and somehow, without us realizing it, they become a beautiful part of our story.',
   "When I look back at everything we have shared, I don't think only about the big moments. I remember the little conversations, the laughter, the silly moments, the unexpected memories, the misunderstandings, the quiet days, and all those times we somehow found our way back to each other.",
-  "We haven't always understood each other perfectly. We've had our differences, our fears, our arguments and our silences. But through all of it, there was always something that kept bringing us back to the same place — **us.**",
+  "We haven't always understood each other perfectly. We've had our differences, our fears, our arguments and our silences. But through all of it, there was always something that kept bringing us back to the same place - **us.**",
   "And maybe that's what makes what we have special.",
   "It isn't perfect.",
   "It doesn't have to be.",
@@ -120,7 +125,7 @@ const LETTER_LINES = [
   "So if there is one thing I want you to remember today, it's this:",
   "**I don't want to simply remember the beautiful moments we've already had.**",
   '**I want to keep creating them with you.**',
-  "I want us to keep learning each other, choosing each other, laughing together, growing together, and finding our way back to each other — again and again.",
+  "I want us to keep learning each other, choosing each other, laughing together, growing together, and finding our way back to each other - again and again.",
   '**Happy Birthday, Potti.**',
   "Here's to everything we've already lived,",
   "everything we're living now,",
