@@ -49,10 +49,10 @@ const REAL_MEMORIES = [
   {src:'assets/real-memories/real-memory-02.jpg', date:'13 Jun 2026', text:"A simple moment. A familiar smile. Somehow, the little moments become the ones worth remembering."},
   {src:'assets/real-memories/real-memory-03.jpg', date:'29 Sep 2026', text:"Princess Birthday celebration in office."},
   {src:'assets/real-memories/real-memory-04.jpg', date:'13 Jun 2026', text:"Somewhere between the mirror and that smile, you made the whole moment worth remembering."},
-  {src:'assets/real-memories/real-memory-05.jpg', date:'', text:"Those eyes don't always say much. Somehow, they still say enough."},
+  {src:'assets/real-memories/real-memory-05.jpg', date:'25 Mar 2026', text:"Those eyes don't always say much. Somehow, they still say enough."},
   {src:'assets/real-memories/real-memory-06.jpg', date:'12 Jun 2026', text:"Some moments aren't planned. They just become part of the story."},
   {src:'assets/real-memories/real-memory-07.jpg', date:'13 Jun 2026', text:"You look beautiful in crowded places, but somehow, you belong to quiet moments too."},
-  {src:'assets/real-memories/real-memory-08.jpg', date:'', text:"Some pictures capture a moment. Some quietly capture an entire version of you."},
+  {src:'assets/real-memories/real-memory-08.jpg', date:'31 Oct 2024', text:"Some pictures capture a moment. Some quietly capture an entire version of you."},
   {src:'assets/real-memories/real-memory-09.jpg', date:'08 Jan 2026', text:"And then there is you, simply being yourself - beautiful even on an ordinary day."},
   {src:'assets/real-memories/real-memory-10.jpg', date:'02 Mar 2024', text:"There is something about your smile that makes an ordinary moment feel a little softer."}
 ];
