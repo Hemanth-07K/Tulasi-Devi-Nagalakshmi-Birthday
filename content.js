@@ -96,7 +96,7 @@ const TIMELINE = [
   {date:'11 Nov 2026', title:'Breakup last meet', text:'Our last meet at Botanical Garden became our last goodbye. I came hoping to save us, but you left me with memories I never wanted to become our ending.'},
   {date:'2 Week Nov 26', title:'The 100 tonnes of Pain', text:'I wasn't prepared to move on. I was falling apart, struggling with depression, panic attacks, and the pain of losing the person I thought would stay beside me.'},
   {date:'2 Week Nov 26', title:'Hope for last chance', text:'I begged you so many times to give me a chance to heal, to help me get through this pain, and to rebuild myself with you, but I never got that chance.'},
-  {date:'AND THEN…', title:'Still Becoming Our Story', text:'We didn't have a perfect story. We had a real one - with laughter, fear, fights, care, forgiveness, and two people who kept finding their way back.'}
+  {date:'AND THEN…', title:'Still Becoming Our Story', text:"We didn't have a perfect story. We had a real one - with laughter, fear, fights, care, forgiveness, and two people who kept finding their way back."}
 ];
 const HER_WORLD = [
   'You give so much love without even realizing how much you give.',
