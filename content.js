@@ -93,10 +93,10 @@ const TIMELINE = [
   {date:'26 Oct 2026', title:'The day you sick', text:'On the first day of your periods, my overcare made you feel restricted instead of loved. I never realised that my care was hurting you.'},
   {date:'26 Oct 2026', title:'Communication gap', text:'What hurt even more was how every fight made you think of leaving us, instead of staying, understanding each other, and working through our problems together.'},
   {date:'11 Nov 2026', title:'Begged for Last Chance', text:'I put aside my ego and pride, begged you from the bottom of my heart, and pleaded for just one last chance, but you never gave me one.'},
-  {date:'11 Nov 2026', title:'Last meet after you broke-up', text:'Our last meet at Botanical Garden became our last goodbye. I came hoping to save us, but you left me with memories I never wanted to become our ending.'},
-  {date:'2 Week of Nov 26', title:'The 100 tonnes of Pain', text:'I wasn't prepared to move on. I was falling apart, struggling with depression, panic attacks, and the pain of losing the person I thought would stay beside me.'},
-  {date:'2 Week of Nov 26', title:'Hope for last chance', text:'I begged you so many times to give me a chance to heal, to help me get through this pain, and to rebuild myself with you, but I never got that chance.'},
-  {date:'AND THEN…', title:'Still Becoming Our Story', text:"We didn't have a perfect story. We had a real one - with laughter, fear, fights, care, forgiveness, and two people who kept finding their way back."}
+  {date:'11 Nov 2026', title:'Breakup last meet', text:'Our last meet at Botanical Garden became our last goodbye. I came hoping to save us, but you left me with memories I never wanted to become our ending.'},
+  {date:'2 Week Nov 26', title:'The 100 tonnes of Pain', text:'I wasn't prepared to move on. I was falling apart, struggling with depression, panic attacks, and the pain of losing the person I thought would stay beside me.'},
+  {date:'2 Week Nov 26', title:'Hope for last chance', text:'I begged you so many times to give me a chance to heal, to help me get through this pain, and to rebuild myself with you, but I never got that chance.'},
+  {date:'AND THEN…', title:'Still Becoming Our Story', text:'We didn't have a perfect story. We had a real one - with laughter, fear, fights, care, forgiveness, and two people who kept finding their way back.'}
 ];
 const HER_WORLD = [
   'You give so much love without even realizing how much you give.',
