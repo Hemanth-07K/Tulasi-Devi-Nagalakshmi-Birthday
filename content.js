@@ -89,13 +89,13 @@ const TIMELINE = [
   {date:'ALONG THE WAY', title:'Finding Our Way Back', text:'Somehow, after every difficult moment, we found another reason to talk, laugh, care and stay.'},
   {date:'26 SEP 2026', title:'A Birthday Before Its Day', text:'You opened the gift I had prepared for you - the little things I had chosen with you in mind. That night, we shared memories, laughter, and conversations that brought us a little closer.'},
   {date:'27 Sep 2026', title:'A Night Across Hyderabad', text:'From late-night roads to Niloufer, Charminar, Tank Bund, and back again - we wandered, talked, ate, laughed, and made another day that felt completely ours.'},
-  {date:'29 Sep 2026', title:'The Day You Were Born', text:'At midnight, I wished you first - and watched my little surprise make you smile. You wore the dress I gave you, celebrated your day, and somewhere between it all, you told me you missed me.'},
-  {date:'26 Oct 2026', title:'On the first day of your periods, my overcare made you feel restricted instead of loved. I never realised that my care was hurting you.'},
-  {date:'26 Oct 2026', title:'What hurt even more was how every fight made you think of leaving us, instead of staying, understanding each other, and working through our problems together.'},
-  {date:'11 Nov 2026', title:'I put aside my ego and pride, begged you from the bottom of my heart, and pleaded for just one last chance, but you never gave me one.'},
-  {date:'11 Nov 2026', title:'Our last meet at Botanical Garden became our last goodbye. I came hoping to save us, but you left me with memories I never wanted to become our ending.'},
-  {date:'2 Week of Nov 26', title:'I wasn't prepared to move on. I was falling apart, struggling with depression, panic attacks, and the pain of losing the person I thought would stay beside me.'},
-  {date:'2 Week of Nov 26', title:'I begged you so many times to give me a chance to heal, to help me get through this pain, and to rebuild myself with you, but I never got that chance.'},
+  {date:'29 Sep 2026', title:'A Night Across Hyderabad', text:'The Day You Were Born', text:'At midnight, I wished you first - and watched my little surprise make you smile. You wore the dress I gave you, celebrated your day, and somewhere between it all, you told me you missed me.'},
+  {date:'26 Oct 2026', title:'The day you sick', text:'On the first day of your periods, my overcare made you feel restricted instead of loved. I never realised that my care was hurting you.'},
+  {date:'26 Oct 2026', title:'Communication gap', text:'What hurt even more was how every fight made you think of leaving us, instead of staying, understanding each other, and working through our problems together.'},
+  {date:'11 Nov 2026', title:'Begged for Last Chance', text:'I put aside my ego and pride, begged you from the bottom of my heart, and pleaded for just one last chance, but you never gave me one.'},
+  {date:'11 Nov 2026', title:'Last meet after you broke-up', text:'Our last meet at Botanical Garden became our last goodbye. I came hoping to save us, but you left me with memories I never wanted to become our ending.'},
+  {date:'2 Week of Nov 26', title:'The 100 tonnes of Pain', text:'I wasn't prepared to move on. I was falling apart, struggling with depression, panic attacks, and the pain of losing the person I thought would stay beside me.'},
+  {date:'2 Week of Nov 26', title:'Hope for last chance', text:'I begged you so many times to give me a chance to heal, to help me get through this pain, and to rebuild myself with you, but I never got that chance.'},
   {date:'AND THEN…', title:'Still Becoming Our Story', text:"We didn't have a perfect story. We had a real one - with laughter, fear, fights, care, forgiveness, and two people who kept finding their way back."}
 ];
 const HER_WORLD = [
